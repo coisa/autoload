@@ -13,6 +13,8 @@
 
 namespace CoiSA\Autoload;
 
+use CoiSA\Autoload\Parser\ParserInterface;
+use CoiSA\Autoload\Parser\PhpTokenStreamParser;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
@@ -33,17 +35,23 @@ final class Autoloader implements AutoloaderInterface
     /** @var \AppendIterator */
     private $directories;
 
+    /** @var ParserInterface */
+    private $parser;
+
     /**
      * Autoloader constructor.
      *
      * @param CacheInterface       $cache
      * @param null|LoggerInterface $logger
      */
-    public function __construct(CacheInterface $cache, LoggerInterface $logger = null)
-    {
-        $this->cache  = $cache;
-        $this->logger = $logger ?: new NullLogger();
-
+    public function __construct(
+        CacheInterface $cache,
+        LoggerInterface $logger = null,
+        ParserInterface $parser = null
+    ) {
+        $this->cache       = $cache;
+        $this->logger      = $logger ?: new NullLogger();
+        $this->parser      = $parser ?: new PhpTokenStreamParser();
         $this->directories = new \AppendIterator();
     }
 
@@ -138,15 +146,13 @@ final class Autoloader implements AutoloaderInterface
     /**
      * @param string $class
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     *
      * @return null|bool
      *
      * @TODO do not parse again not modified files
      */
     private function tryLoad($class)
     {
-        /** @var \SplFileObject $file */
+        /** @var \SplFileInfo $file */
         foreach ($this->directories as $file) {
             if (false === $file->isFile()) {
                 continue;
@@ -154,7 +160,7 @@ final class Autoloader implements AutoloaderInterface
 
             $path = $file->getRealPath() ?: $file->getPathname();
 
-            if (preg_match('/\/vendor\/.*/', $path, $matches)) {
+            if (\preg_match('/\/vendor\/.*/', $path, $matches)) {
                 continue;
             }
 
@@ -162,17 +168,11 @@ final class Autoloader implements AutoloaderInterface
                 continue;
             }
 
-            $phpTokenStream = \PHP_Token_Stream_CachingFactory::get($path);
-            $classes        = \array_merge(
-                $phpTokenStream->getClasses(),
-                $phpTokenStream->getInterfaces(),
-                $phpTokenStream->getTraits()
-            );
+            $classes = $this->parser->findClasses($file);
 
-            foreach ($classes as $className => $info) {
-                $cacheKey = $this->getCacheKey($info['package']['namespace'] . '\\' . $className);
-
-                $this->cache->set($cacheKey, $info['file']);
+            foreach ($classes as $className) {
+                $cacheKey = $this->getCacheKey($className);
+                $this->cache->set($cacheKey, $path);
             }
 
             if ($this->tryLoadFromCache($class)) {

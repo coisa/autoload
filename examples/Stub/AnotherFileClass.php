@@ -11,6 +11,9 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
+/**
+ * Class ClassWithoutNamespace
+ */
 class ClassWithoutNamespace
 {
     public function __construct()
