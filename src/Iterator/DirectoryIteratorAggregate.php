@@ -46,7 +46,10 @@ final class DirectoryIteratorAggregate implements \IteratorAggregate
             throw new \RuntimeException('The path given is not readable.');
         }
 
-        $directoryIterator              = new \RecursiveDirectoryIterator($fileInfo->getRealPath());
+        $directoryIterator = new \RecursiveDirectoryIterator(
+            $fileInfo->getRealPath(),
+            \FilesystemIterator::SKIP_DOTS
+        );
         $recursivePhpFileFilterIterator = new RecursivePhpFileFilterIterator($directoryIterator);
         $recursiveIteratorIterator      = new \RecursiveIteratorIterator($recursivePhpFileFilterIterator);
 
