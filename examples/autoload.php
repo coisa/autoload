@@ -29,3 +29,7 @@ $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();
 $stub2 = new CoiSA\Autoload\Example\Stub\AnotherUnknowClassFile();
 $stub3 = new CoiSA\Example\Stub\LostClassFile();
 $stub4 = new ClassWithoutNamespace();
+
+if (class_exists('TestInterface')) {
+    echo "TestInterface\n";
+}

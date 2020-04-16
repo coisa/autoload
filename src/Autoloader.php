@@ -160,7 +160,10 @@ final class Autoloader implements AutoloaderInterface
             }
 
             $phpTokenStream = \PHP_Token_Stream_CachingFactory::get($path);
-            $classes        = $phpTokenStream->getClasses();
+            $classes        = \array_merge(
+                $phpTokenStream->getClasses(),
+                $phpTokenStream->getInterfaces()
+            );
 
             foreach ($classes as $className => $info) {
                 $cacheKey = $this->getCacheKey($info['package']['namespace'] . '\\' . $className);
