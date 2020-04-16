@@ -28,6 +28,7 @@ final class Autoloader implements AutoloaderInterface
     /** @var CacheInterface */
     private $cache;
 
+    /** @var LoggerInterface */
     private $logger;
 
     /** @var \AppendIterator */
