@@ -13,6 +13,7 @@
 
 namespace CoiSA\Autoload;
 
+use CoiSA\Autoload\Iterator\DirectoryIteratorAggregate;
 use CoiSA\Autoload\Parser\ParserInterface;
 use CoiSA\Autoload\Parser\PhpTokenStreamParser;
 use Psr\Log\LoggerInterface;
@@ -52,7 +53,7 @@ final class Autoloader implements AutoloaderInterface
         $this->cache       = $cache;
         $this->logger      = $logger ?: new NullLogger();
         $this->parser      = $parser ?: new PhpTokenStreamParser();
-        $this->directories = new \AppendIterator();
+        $this->directories = new DirectoryIteratorAggregate();
     }
 
     /**
@@ -92,20 +93,7 @@ final class Autoloader implements AutoloaderInterface
      */
     public function addDirectory($path)
     {
-        $fileInfo = new \SplFileInfo($path);
-
-        if (false === $fileInfo->isDir()) {
-            throw new \UnexpectedValueException('The path given not seen to be a directory.');
-        }
-
-        if (false === $fileInfo->isReadable()) {
-            throw new \RuntimeException('The path given is not readable.');
-        }
-
-        $directoryIterator         = new \RecursiveDirectoryIterator($fileInfo->getRealPath());
-        $recursiveIteratorIterator = new \RecursiveIteratorIterator($directoryIterator);
-
-        $this->directories->append($recursiveIteratorIterator);
+        $this->directories->addDirectory($path);
     }
 
     /**
@@ -147,8 +135,6 @@ final class Autoloader implements AutoloaderInterface
      * @param string $class
      *
      * @return null|bool
-     *
-     * @TODO do not parse again not modified files
      */
     private function tryLoad($class)
     {
@@ -158,16 +144,7 @@ final class Autoloader implements AutoloaderInterface
                 continue;
             }
 
-            $path = $file->getRealPath() ?: $file->getPathname();
-
-            if (\preg_match('/\/vendor\/.*/', $path, $matches)) {
-                continue;
-            }
-
-            if ('php' !== \pathinfo($path, PATHINFO_EXTENSION)) {
-                continue;
-            }
-
+            $path    = $file->getRealPath() ?: $file->getPathname();
             $classes = $this->parser->findClasses($file);
 
             foreach ($classes as $className) {

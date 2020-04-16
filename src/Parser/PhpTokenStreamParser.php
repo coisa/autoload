@@ -24,6 +24,8 @@ final class PhpTokenStreamParser implements ParserInterface
      * @param string $path
      *
      * @return array
+     *
+     * @TODO do not parse again not modified files
      */
     public function findClasses(\SplFileInfo $fileInfo)
     {
