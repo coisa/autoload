@@ -143,13 +143,13 @@ final class Autoloader implements AutoloaderInterface
      * @return null|bool
      *
      * @TODO do not parse again not modified files
-     * @TODO ignore files with vendor in path            $phpTokenStream = new PHP_Token_Stream($path);
+     * @TODO ignore files with vendor in path
      */
     private function tryLoad($class)
     {
         /** @var \SplFileObject $file */
         foreach ($this->directories as $file) {
-            if (!$file->isFile()) {
+            if (false === $file->isFile()) {
                 continue;
             }
 
