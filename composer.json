@@ -1,0 +1,55 @@
+{
+    "name": "coisa/autoload",
+    "type": "library",
+    "description": "PHP Class Autoloader",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "github@felipeabreu.com.br"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "phpunit/php-token-stream": "^1.4",
+        "psr/log": "^1.1",
+        "psr/simple-cache": "^1.0"
+    },
+    "require-dev": {
+        "cache/array-adapter": "^1.0",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "jangregor/phpstan-prophecy": "^0.6.2",
+        "malukenho/docheader": "^0.1.8",
+        "phpstan/phpstan": "^0.12.18",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "CoiSA\\Autoload\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CoiSA\\Autoload\\": "src"
+        }
+    },
+    "minimum-stability": "stable",
+    "scripts": {
+        "analyze": "phpstan analyze",
+        "check": [
+            "@test",
+            "@sniff",
+            "@cs-check",
+            "@analyze",
+            "@docheader-check"
+        ],
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "docheader-check": "docheader check ./src ./tests",
+        "sniff": "phpcs",
+        "test": "phpunit --color=always"
+    }
+}
