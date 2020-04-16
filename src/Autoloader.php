@@ -137,8 +137,7 @@ final class Autoloader implements AutoloaderInterface
             $classes        = $phpTokenStream->getClasses();
 
             foreach ($classes as $className => $info) {
-                $namespace = \ltrim($info['package']['namespace'] . '\\', '\\');
-                $cacheKey  = $this->getCacheKey($namespace . $className);
+                $cacheKey  = $this->getCacheKey($info['package']['namespace'] . '\\' . $className);
 
                 $this->cache->set($cacheKey, $info['file']);
             }
@@ -167,6 +166,6 @@ final class Autoloader implements AutoloaderInterface
      */
     private function getCacheKey($class)
     {
-        return \str_replace('\\', '|', $class);
+        return \str_replace('\\', '|', \ltrim($class, '\\'));
     }
 }
