@@ -142,6 +142,9 @@ final class Autoloader implements AutoloaderInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *
      * @return null|bool
+     *
+     * @TODO do not parse again not modified files
+     * @TODO ignore files with vendor in path
      */
     private function tryLoad($class)
     {
