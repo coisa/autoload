@@ -13,7 +13,6 @@
 
 namespace CoiSA\Autoload;
 
-use PHP_Token_Stream;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
@@ -144,7 +143,7 @@ final class Autoloader implements AutoloaderInterface
      * @return null|bool
      *
      * @TODO do not parse again not modified files
-     * @TODO ignore files with vendor in path
+     * @TODO ignore files with vendor in path            $phpTokenStream = new PHP_Token_Stream($path);
      */
     private function tryLoad($class)
     {
@@ -160,7 +159,7 @@ final class Autoloader implements AutoloaderInterface
                 continue;
             }
 
-            $phpTokenStream = new PHP_Token_Stream($path);
+            $phpTokenStream = \PHP_Token_Stream_CachingFactory::get($path);
             $classes        = $phpTokenStream->getClasses();
 
             foreach ($classes as $className => $info) {
