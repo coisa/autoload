@@ -148,6 +148,7 @@ final class Autoloader implements AutoloaderInterface
      */
     private function tryLoad($class)
     {
+        /** @var \SplFileObject $file */
         foreach ($this->directories as $file) {
             if (!$file->isFile()) {
                 continue;
