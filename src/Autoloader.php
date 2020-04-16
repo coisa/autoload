@@ -75,22 +75,9 @@ final class Autoloader implements AutoloaderInterface
      */
     public function loadClass($class)
     {
-        $cacheKey = $this->getCacheKey($class);
-
-        if ($this->cache->has($cacheKey)) {
-            $file = $this->cache->get($cacheKey);
-
-            require_once $file;
-
-            $this->logger->info(
-                'Class "{class}" found in "{file}" was loaded from cache.',
-                \compact('class', 'file')
-            );
-
-            return true;
+        if (false === $this->tryLoadFromCache($class)) {
+            return $this->tryLoad($class);
         }
-
-        return $this->tryLoad($class);
     }
 
     /**
@@ -117,6 +104,41 @@ final class Autoloader implements AutoloaderInterface
     /**
      * @param string $class
      *
+     * @return string
+     */
+    private function getCacheKey($class)
+    {
+        return \str_replace('\\', '|', \ltrim($class, '\\'));
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return bool
+     */
+    private function tryLoadFromCache($class)
+    {
+        $cacheKey = $this->getCacheKey($class);
+
+        if ($this->cache->has($cacheKey)) {
+            $file = $this->cache->get($cacheKey);
+
+            require_once $file;
+
+            $this->logger->info(
+                'Class "{class}" found in "{file}" loaded.',
+                \compact('class', 'file')
+            );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $class
+     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *
      * @return null|bool
@@ -138,35 +160,14 @@ final class Autoloader implements AutoloaderInterface
             $classes        = $phpTokenStream->getClasses();
 
             foreach ($classes as $className => $info) {
-                $cacheKey  = $this->getCacheKey($info['package']['namespace'] . '\\' . $className);
+                $cacheKey = $this->getCacheKey($info['package']['namespace'] . '\\' . $className);
 
                 $this->cache->set($cacheKey, $info['file']);
             }
 
-            $cacheKey = $this->getCacheKey($class);
-
-            if ($this->cache->has($cacheKey)) {
-                $file = $this->cache->get($cacheKey);
-
-                require_once $file;
-
-                $this->logger->info(
-                    'Class "{class}" found in "{file}" was loaded.',
-                    \compact('class', 'file')
-                );
-
+            if ($this->tryLoadFromCache($class)) {
                 return true;
             }
         }
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return string
-     */
-    private function getCacheKey($class)
-    {
-        return \str_replace('\\', '|', \ltrim($class, '\\'));
     }
 }
