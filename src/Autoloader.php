@@ -43,7 +43,7 @@ final class Autoloader implements AutoloaderInterface
     public function __construct(CacheInterface $cache, LoggerInterface $logger = null)
     {
         $this->cache  = $cache;
-        $this->logger = $logger ? $logger : new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
 
         $this->directories = new \AppendIterator();
     }
