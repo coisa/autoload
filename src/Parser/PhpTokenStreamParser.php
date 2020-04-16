@@ -117,8 +117,7 @@ final class PhpTokenStreamParser implements ParserInterface
      */
     private function getTokens(\SplFileInfo $fileInfo)
     {
-        $fileObject = $fileInfo->openFile();
-        $contents = $fileObject->fread($fileObject->getSize());
+        $contents = \file_get_contents($fileInfo->getRealPath());
 
         return \token_get_all($contents);
     }
