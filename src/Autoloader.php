@@ -79,9 +79,11 @@ final class Autoloader implements AutoloaderInterface
      */
     public function loadClass($class)
     {
-        if (false === $this->tryLoadFromCache($class)) {
-            return $this->tryLoad($class);
+        if ($this->tryLoadFromCache($class)) {
+            return true;
         }
+
+        return $this->tryLoad($class);
     }
 
     /**
@@ -89,6 +91,13 @@ final class Autoloader implements AutoloaderInterface
      */
     public function addDirectory($path)
     {
+        if (!is_dir($path) || !is_file($path)) {
+            $this->logger->error(
+                'Could not scan for classes inside "{path}" which does not appear to be a file nor a folder.',
+                compact('path')
+            );
+        }
+
         $this->directories->append($path);
     }
 
@@ -103,6 +112,20 @@ final class Autoloader implements AutoloaderInterface
         foreach ($this->directories as $file) {
             $this->cacheFileClassMap($file);
         }
+    }
+
+    /**
+     * @param string $file
+     * @param string $class
+     */
+    private function loadFile($file, $class)
+    {
+        require_once $file;
+
+        $this->logger->info(
+            'Class resolution, "{class}" found in "{file}" was loaded.',
+            \compact('class', 'file')
+        );
     }
 
     /**
@@ -124,20 +147,14 @@ final class Autoloader implements AutoloaderInterface
     {
         $cacheKey = $this->getCacheKey($class);
 
-        if ($this->cache->has($cacheKey)) {
-            $file = $this->cache->get($cacheKey);
-
-            require_once $file;
-
-            $this->logger->info(
-                'Class "{class}" found in "{file}" loaded.',
-                \compact('class', 'file')
-            );
-
-            return true;
+        if (false === $this->cache->has($cacheKey)) {
+            return false;
         }
 
-        return false;
+        $file = $this->cache->get($cacheKey);
+        $this->loadFile($file, $class);
+
+        return true;
     }
 
     /**
@@ -151,9 +168,11 @@ final class Autoloader implements AutoloaderInterface
         foreach ($this->directories as $file) {
             $this->cacheFileClassMap($file);
 
-            if ($this->tryLoadFromCache($class)) {
-                return true;
+            if (false === $this->tryLoadFromCache($class)) {
+                continue;
             }
+
+            return true;
         }
     }
 
@@ -179,16 +198,19 @@ final class Autoloader implements AutoloaderInterface
     {
         $cacheKey = $this->getCacheKey($class);
 
-        if ($this->cache->has($cacheKey)) {
-            $this->logger->warning('Class "{class}" found in "{path}" already set in "{file}".', array(
+        if (false === $this->cache->has($cacheKey)) {
+            return $this->cache->set($cacheKey, $path);
+        }
+
+        $this->logger->warning(
+            'Ambiguous class resolution, "{class}" was found in both "{file}" and "{path}", the first will be used.',
+            array(
                 'class' => $class,
                 'path' => $path,
                 'file' => $this->cache->get($cacheKey)
-            ));
+            )
+        );
 
-            return false;
-        }
-
-        return $this->cache->set($cacheKey, $path);
+        return false;
     }
 }
