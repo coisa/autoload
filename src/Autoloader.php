@@ -136,16 +136,38 @@ final class Autoloader implements AutoloaderInterface
     {
         /** @var \SplFileInfo $file */
         foreach ($this->directories as $file) {
-            $classes = ClassMapGenerator::createMap($file->getRealPath());
+            $classMap = ClassMapGenerator::createMap($file->getRealPath());
 
-            foreach ($classes as $className => $path) {
-                $cacheKey = $this->getCacheKey($className);
-                $this->cache->set($cacheKey, $path);
+            foreach ($classMap as $fqcn => $path) {
+                $this->cacheClassReference($fqcn, $path);
             }
 
             if ($this->tryLoadFromCache($class)) {
                 return true;
             }
         }
+    }
+
+    /**
+     * @param string $class
+     * @param string $path
+     *
+     * @return bool
+     */
+    private function cacheClassReference($class, $path)
+    {
+        $cacheKey = $this->getCacheKey($class);
+
+        if ($this->cache->has($cacheKey)) {
+            $this->logger->warning('Class "{class}" found in "{path}" already set in "{file}".', array(
+                'class' => $class,
+                'path' => $path,
+                'file' => $this->cache->get($cacheKey)
+            ));
+
+            return false;
+        }
+
+        return $this->cache->set($cacheKey, $path);
     }
 }
