@@ -198,13 +198,15 @@ final class Autoloader implements AutoloaderInterface
             return $this->cache->set($cacheKey, $path);
         }
 
+        $file = $this->cache->get($cacheKey);
+
+        if ($path === $file) {
+            return true;
+        }
+
         $this->logger->warning(
             'Ambiguous class resolution, "{class}" was found in both "{file}" and "{path}", the first will be used.',
-            array(
-                'class' => $class,
-                'path'  => $path,
-                'file'  => $this->cache->get($cacheKey)
-            )
+            compact('class', 'path', 'file')
         );
 
         return false;
