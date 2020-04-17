@@ -91,9 +91,9 @@ final class Autoloader implements AutoloaderInterface
      */
     public function addDirectory($path)
     {
-        if (!is_dir($path) || !is_file($path)) {
+        if (!is_dir($path)) {
             $this->logger->error(
-                'Could not scan for classes inside "{path}" which does not appear to be a file nor a folder.',
+                'Could not scan for classes inside "{path}" which does not appear to be a folder.',
                 compact('path')
             );
         }
