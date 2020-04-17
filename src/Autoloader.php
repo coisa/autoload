@@ -93,6 +93,19 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
+     * Warm up cache.
+     *
+     * It will warm up all found classes on PHP files of each directory.
+     */
+    public function cacheWarmUp()
+    {
+        /** @var \SplFileInfo $file */
+        foreach ($this->directories as $file) {
+            $this->cacheFileClassMap($file);
+        }
+    }
+
+    /**
      * @param string $class
      *
      * @return string
@@ -136,15 +149,23 @@ final class Autoloader implements AutoloaderInterface
     {
         /** @var \SplFileInfo $file */
         foreach ($this->directories as $file) {
-            $classMap = ClassMapGenerator::createMap($file->getRealPath());
-
-            foreach ($classMap as $fqcn => $path) {
-                $this->cacheClassReference($fqcn, $path);
-            }
+            $this->cacheFileClassMap($file);
 
             if ($this->tryLoadFromCache($class)) {
                 return true;
             }
+        }
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     */
+    private function cacheFileClassMap(\SplFileInfo $file)
+    {
+        $classMap = ClassMapGenerator::createMap($file->getRealPath());
+
+        foreach ($classMap as $fqcn => $path) {
+            $this->cacheClassReference($fqcn, $path);
         }
     }
 
