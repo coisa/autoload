@@ -14,17 +14,17 @@
 namespace CoiSA\Autoload\Iterator;
 
 /**
- * Class DirectoryIteratorAggregate
+ * Class RecursiveDirectoryAppendIteratorAggregate
  *
  * @package CoiSA\Autoload\Iterator
  */
-final class DirectoryIteratorAggregate implements \IteratorAggregate
+final class RecursiveDirectoryAppendIteratorAggregate implements \IteratorAggregate
 {
     /** @var \AppendIterator */
     private $directories;
 
     /**
-     * DirectoryIteratorAggregate constructor.
+     * RecursiveDirectoryAppendIteratorAggregate constructor.
      */
     public function __construct()
     {
@@ -33,6 +33,9 @@ final class DirectoryIteratorAggregate implements \IteratorAggregate
 
     /**
      * @param string $path
+     *
+     * @throws \UnexpectedValueException
+     * @throws \RuntimeException
      */
     public function addDirectory($path)
     {
@@ -50,7 +53,7 @@ final class DirectoryIteratorAggregate implements \IteratorAggregate
             $fileInfo->getRealPath(),
             \FilesystemIterator::SKIP_DOTS
         );
-        $recursivePhpFileFilterIterator = new RecursivePhpFileFilterIterator($directoryIterator);
+        $recursivePhpFileFilterIterator = new RecursiveDirectoryPhpFileFilterIterator($directoryIterator);
         $recursiveIteratorIterator      = new \RecursiveIteratorIterator($recursivePhpFileFilterIterator);
 
         $this->directories->append($recursiveIteratorIterator);

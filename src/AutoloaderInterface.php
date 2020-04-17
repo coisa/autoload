@@ -32,12 +32,14 @@ interface AutoloaderInterface
     /**
      * Registers this instance as an autoloader.
      *
-     * @param bool $prepend Whether to prepend the autoloader or not
+     * @return bool
      */
-    public function register($prepend = false);
+    public function register();
 
     /**
      * Unregisters this instance as an autoloader.
+     *
+     * @return bool
      */
     public function unregister();
 }

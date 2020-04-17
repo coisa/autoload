@@ -13,9 +13,8 @@
 
 namespace CoiSA\Autoload;
 
-use CoiSA\Autoload\Iterator\DirectoryIteratorAggregate;
-use CoiSA\Autoload\Parser\ParserInterface;
-use CoiSA\Autoload\Parser\PhpTokenStreamParser;
+use CoiSA\Autoload\Iterator\RecursiveDirectoryAppendIteratorAggregate;
+use Composer\Autoload\ClassMapGenerator;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
@@ -33,45 +32,42 @@ final class Autoloader implements AutoloaderInterface
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var \AppendIterator */
+    /** @var \Iterator */
     private $directories;
-
-    /** @var ParserInterface */
-    private $parser;
 
     /**
      * Autoloader constructor.
      *
-     * @param CacheInterface       $cache
-     * @param null|LoggerInterface $logger
+     * @param CacheInterface $cache
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         CacheInterface $cache,
-        LoggerInterface $logger = null,
-        ParserInterface $parser = null
+        LoggerInterface $logger = null
     ) {
         $this->cache       = $cache;
         $this->logger      = $logger ?: new NullLogger();
-        $this->parser      = $parser ?: new PhpTokenStreamParser();
-        $this->directories = new DirectoryIteratorAggregate();
+        $this->directories = new RecursiveDirectoryAppendIteratorAggregate();
     }
 
     /**
      * Registers this instance as an autoloader.
      *
-     * @param bool $prepend Whether to prepend the autoloader or not
+     * @return bool
      */
-    public function register($prepend = false)
+    public function register()
     {
-        \spl_autoload_register(array($this, 'loadClass'), true, $prepend);
+        return \spl_autoload_register(array($this, 'loadClass'), true, false);
     }
 
     /**
      * Unregisters this instance as an autoloader.
+     *
+     * @return bool
      */
     public function unregister()
     {
-        \spl_autoload_unregister(array($this, 'loadClass'));
+        return \spl_autoload_unregister(array($this, 'loadClass'));
     }
 
     /**
@@ -140,14 +136,9 @@ final class Autoloader implements AutoloaderInterface
     {
         /** @var \SplFileInfo $file */
         foreach ($this->directories as $file) {
-            if (false === $file->isFile()) {
-                continue;
-            }
+            $classes = ClassMapGenerator::createMap($file->getRealPath());
 
-            $path    = $file->getRealPath() ?: $file->getPathname();
-            $classes = $this->parser->findClasses($file);
-
-            foreach ($classes as $className) {
+            foreach ($classes as $className => $path) {
                 $cacheKey = $this->getCacheKey($className);
                 $this->cache->set($cacheKey, $path);
             }

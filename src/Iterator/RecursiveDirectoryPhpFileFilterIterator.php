@@ -14,14 +14,14 @@
 namespace CoiSA\Autoload\Iterator;
 
 /**
- * Class RecursivePhpFileFilterIterator
+ * Class RecursiveDirectoryPhpFileFilterIterator
  *
  * @package CoiSA\Autoload\Iterator
  */
-final class RecursivePhpFileFilterIterator extends \RecursiveFilterIterator
+final class RecursiveDirectoryPhpFileFilterIterator extends \RecursiveFilterIterator
 {
     /**
-     * RecursivePhpFileFilterIterator constructor.
+     * RecursiveDirectoryPhpFileFilterIterator constructor.
      *
      * @param \RecursiveDirectoryIterator $recursiveDirectoryIterator
      */
@@ -38,14 +38,11 @@ final class RecursivePhpFileFilterIterator extends \RecursiveFilterIterator
         /** @var \SplFileInfo $fileInfo */
         $fileInfo = $this->current();
 
-        if ($fileInfo->isDir() && $fileInfo->getBasename() === 'vendor') {
-            return false;
+        if ($fileInfo->isDir()) {
+            return true;
         }
 
-        if ($fileInfo->isFile() && $fileInfo->getExtension() !== 'php') {
-            return false;
-        }
-
-        return true;
+        return $fileInfo->isFile()
+            && $fileInfo->getExtension() === 'php';
     }
 }
