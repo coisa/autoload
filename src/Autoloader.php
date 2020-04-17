@@ -124,7 +124,7 @@ final class Autoloader implements AutoloaderInterface
         }
 
         $file = $this->cache->get($cacheKey);
-        $this->loadFile($file, $class);
+        $this->loadClassInFile($class, $file);
 
         return true;
     }
@@ -140,10 +140,10 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
-     * @param string $file
      * @param string $class
+     * @param string $file
      */
-    private function loadFile($file, $class)
+    private function loadClassInFile($class, $file)
     {
         require_once $file;
 
