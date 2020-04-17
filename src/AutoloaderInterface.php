@@ -21,6 +21,11 @@ namespace CoiSA\Autoload;
 interface AutoloaderInterface
 {
     /**
+     * @param string $path
+     */
+    public function addDirectory($path);
+
+    /**
      * Loads the given class or interface.
      *
      * @param string $class The name of the class
