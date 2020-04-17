@@ -55,10 +55,10 @@ final class Autoloader implements AutoloaderInterface
      */
     public function addDirectory($path)
     {
-        if (!is_dir($path)) {
+        if (false === \is_dir($path)) {
             $this->logger->error(
                 'Could not scan for classes inside "{path}" which does not appear to be a folder.',
-                compact('path')
+                \compact('path')
             );
 
             return false;
@@ -202,8 +202,8 @@ final class Autoloader implements AutoloaderInterface
             'Ambiguous class resolution, "{class}" was found in both "{file}" and "{path}", the first will be used.',
             array(
                 'class' => $class,
-                'path' => $path,
-                'file' => $this->cache->get($cacheKey)
+                'path'  => $path,
+                'file'  => $this->cache->get($cacheKey)
             )
         );
 
