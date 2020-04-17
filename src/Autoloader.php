@@ -51,31 +51,26 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
-     * Registers this instance as an autoloader.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function register()
+    public function addDirectory($path)
     {
-        return \spl_autoload_register(array($this, 'loadClass'), true, false);
+        if (!is_dir($path)) {
+            $this->logger->error(
+                'Could not scan for classes inside "{path}" which does not appear to be a folder.',
+                compact('path')
+            );
+
+            return false;
+        }
+
+        $this->directories->append($path);
+
+        return true;
     }
 
     /**
-     * Unregisters this instance as an autoloader.
-     *
-     * @return bool
-     */
-    public function unregister()
-    {
-        return \spl_autoload_unregister(array($this, 'loadClass'));
-    }
-
-    /**
-     * Loads the given class or interface.
-     *
-     * @param string $class The name of the class
-     *
-     * @return null|bool True, if loaded
+     * {@inheritDoc}
      */
     public function loadClass($class)
     {
@@ -87,18 +82,19 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
-     * @param string $path
+     * {@inheritDoc}
      */
-    public function addDirectory($path)
+    public function register()
     {
-        if (!is_dir($path)) {
-            $this->logger->error(
-                'Could not scan for classes inside "{path}" which does not appear to be a folder.',
-                compact('path')
-            );
-        }
+        return \spl_autoload_register(array($this, 'loadClass'), true, false);
+    }
 
-        $this->directories->append($path);
+    /**
+     * {@inheritDoc}
+     */
+    public function unregister()
+    {
+        return \spl_autoload_unregister(array($this, 'loadClass'));
     }
 
     /**
@@ -112,30 +108,6 @@ final class Autoloader implements AutoloaderInterface
         foreach ($this->directories as $file) {
             $this->cacheFileClassMap($file);
         }
-    }
-
-    /**
-     * @param string $file
-     * @param string $class
-     */
-    private function loadFile($file, $class)
-    {
-        require_once $file;
-
-        $this->logger->info(
-            'Class resolution, "{class}" found in "{file}" was loaded.',
-            \compact('class', 'file')
-        );
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return string
-     */
-    private function getCacheKey($class)
-    {
-        return \str_replace('\\', '|', \ltrim($class, '\\'));
     }
 
     /**
@@ -155,6 +127,30 @@ final class Autoloader implements AutoloaderInterface
         $this->loadFile($file, $class);
 
         return true;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return string
+     */
+    private function getCacheKey($class)
+    {
+        return \str_replace('\\', '|', \ltrim($class, '\\'));
+    }
+
+    /**
+     * @param string $file
+     * @param string $class
+     */
+    private function loadFile($file, $class)
+    {
+        require_once $file;
+
+        $this->logger->info(
+            'Class resolution, "{class}" found in "{file}" was loaded.',
+            \compact('class', 'file')
+        );
     }
 
     /**

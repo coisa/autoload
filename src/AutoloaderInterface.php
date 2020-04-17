@@ -21,16 +21,20 @@ namespace CoiSA\Autoload;
 interface AutoloaderInterface
 {
     /**
+     * Add a directory to scan for classes inside PHP files.
+     *
      * @param string $path
+     *
+     * @return bool
      */
     public function addDirectory($path);
 
     /**
      * Loads the given class or interface.
      *
-     * @param string $class The name of the class
+     * @param string $class
      *
-     * @return null|bool True, if loaded
+     * @return bool
      */
     public function loadClass($class);
 
