@@ -97,9 +97,9 @@ final class Autoloader implements AutoloaderInterface
      *
      * @return string
      */
-    private function getCacheKey($class)
+    private function formatClassNameToPsr0($class)
     {
-        return \str_replace('\\', '|', \ltrim($class, '\\'));
+        return \str_replace('\\', '_', \ltrim($class, '\\'));
     }
 
     /**
@@ -109,7 +109,7 @@ final class Autoloader implements AutoloaderInterface
      */
     private function tryLoadFromCache($class)
     {
-        $cacheKey = $this->getCacheKey($class);
+        $cacheKey = $this->formatClassNameToPsr0($class);
 
         if ($this->cache->has($cacheKey)) {
             $file = $this->cache->get($cacheKey);
@@ -139,7 +139,7 @@ final class Autoloader implements AutoloaderInterface
             $classes = ClassMapGenerator::createMap($file->getRealPath());
 
             foreach ($classes as $className => $path) {
-                $cacheKey = $this->getCacheKey($className);
+                $cacheKey = $this->formatClassNameToPsr0($className);
                 $this->cache->set($cacheKey, $path);
             }
 
