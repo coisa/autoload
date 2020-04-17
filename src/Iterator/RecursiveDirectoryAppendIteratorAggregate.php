@@ -20,6 +20,9 @@ namespace CoiSA\Autoload\Iterator;
  */
 final class RecursiveDirectoryAppendIteratorAggregate implements \IteratorAggregate
 {
+    /** @var int */
+    const FLAGS = \FilesystemIterator::SKIP_DOTS;
+
     /** @var \AppendIterator */
     private $directories;
 
@@ -37,24 +40,13 @@ final class RecursiveDirectoryAppendIteratorAggregate implements \IteratorAggreg
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
      */
-    public function addDirectory($path)
+    public function append($path)
     {
-        $fileInfo = new \SplFileInfo($path);
-
-        if (false === $fileInfo->isDir()) {
-            throw new \UnexpectedValueException('The path given not seen to be a directory.');
-        }
-
-        if (false === $fileInfo->isReadable()) {
-            throw new \RuntimeException('The path given is not readable.');
-        }
-
-        $directoryIterator = new \RecursiveDirectoryIterator(
-            $fileInfo->getRealPath(),
-            \FilesystemIterator::SKIP_DOTS
+        $directoryIterator                       = new \RecursiveDirectoryIterator($path, self::FLAGS);
+        $recursiveDirectoryPhpFileFilterIterator = new RecursiveDirectoryPhpFileFilterIterator($directoryIterator);
+        $recursiveIteratorIterator               = new \RecursiveIteratorIterator(
+            $recursiveDirectoryPhpFileFilterIterator
         );
-        $recursivePhpFileFilterIterator = new RecursiveDirectoryPhpFileFilterIterator($directoryIterator);
-        $recursiveIteratorIterator      = new \RecursiveIteratorIterator($recursivePhpFileFilterIterator);
 
         $this->directories->append($recursiveIteratorIterator);
     }

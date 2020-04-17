@@ -38,8 +38,8 @@ final class Autoloader implements AutoloaderInterface
     /**
      * Autoloader constructor.
      *
-     * @param CacheInterface $cache
-     * @param LoggerInterface|null $logger
+     * @param CacheInterface       $cache
+     * @param null|LoggerInterface $logger
      */
     public function __construct(
         CacheInterface $cache,
@@ -89,7 +89,7 @@ final class Autoloader implements AutoloaderInterface
      */
     public function addDirectory($path)
     {
-        $this->directories->addDirectory($path);
+        $this->directories->append($path);
     }
 
     /**
