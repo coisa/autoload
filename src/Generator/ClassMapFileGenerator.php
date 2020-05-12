@@ -105,6 +105,18 @@ final class ClassMapFileGenerator implements ClassMapGeneratorInterface
      */
     private function includeClassMap()
     {
-        return include $this->classMapCacheFile->getRealPath();
+        return includePhpFile($this->classMapCacheFile->getRealPath());
     }
+}
+
+/**
+ * Scope isolated include.
+ *
+ * Prevents access to $this/self from included files.
+ *
+ * @param mixed $file
+ */
+function includePhpFile($file)
+{
+    return include $file;
 }
