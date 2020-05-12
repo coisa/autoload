@@ -24,7 +24,11 @@ $classMapFilePath = \dirname(__DIR__) . '/vendor/composer/autoload_classmap_exam
 $classMapGenerator = new CoiSA\Autoload\Generator\ClassMapFileGenerator($classMapFilePath, $logger);
 $classMapGenerator->addDirectory(\dirname(__DIR__) . '/tests/stubs');
 
-$autoloader = new CoiSA\Autoload\Autoloader($classLoader, $classMapGenerator);
+// $classLoader->addClassMap($classMapGenerator->getClassMap());
+// or
+// $autoloader = new CoiSA\Autoload\Autoloader($classMapGenerator);
+// or even
+$autoloader = new CoiSA\Autoload\Autoloader($classMapGenerator, $classLoader);
 $autoloader->register();
 
 $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();

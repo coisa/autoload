@@ -32,15 +32,15 @@ final class Autoloader implements AutoloaderInterface
     /**
      * Autoloader constructor.
      *
-     * @param ClassLoader                $classLoader
      * @param ClassMapGeneratorInterface $classMapGenerator
+     * @param null|ClassLoader           $classLoader
      */
     public function __construct(
-        ClassLoader $classLoader,
-        ClassMapGeneratorInterface $classMapGenerator
+        ClassMapGeneratorInterface $classMapGenerator,
+        ClassLoader $classLoader = null
     ) {
-        $this->classLoader       = $classLoader;
         $this->classMapGenerator = $classMapGenerator;
+        $this->classLoader       = $classLoader ?: new ClassLoader();
     }
 
     /**
@@ -51,5 +51,6 @@ final class Autoloader implements AutoloaderInterface
         $classMap = $this->classMapGenerator->getClassMap();
 
         $this->classLoader->addClassMap($classMap);
+        $this->classLoader->register();
     }
 }

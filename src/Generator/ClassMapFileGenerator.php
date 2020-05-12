@@ -37,7 +37,7 @@ final class ClassMapFileGenerator implements ClassMapGeneratorInterface
      * ClassMapFileGenerator constructor.
      *
      * @param $classMapCacheFile
-     * @param LoggerInterface|null $logger
+     * @param null|LoggerInterface $logger
      */
     public function __construct(
         $classMapCacheFile,
