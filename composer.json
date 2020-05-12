@@ -34,7 +34,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "CoiSA\\Autoload\\": "src"
+            "Test\\": "tests"
         }
     },
     "minimum-stability": "stable",
