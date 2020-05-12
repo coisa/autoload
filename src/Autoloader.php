@@ -83,24 +83,48 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
+     * Return classmap array references.
+     *
      * @return string[]
      */
     private function getClassMap()
     {
         if ($this->classMapCacheFile->isFile()) {
-            $classMap = require $this->classMapCacheFile->getRealPath();
+            $classMap = $this->includeClassMap();
         }
 
         if (empty($classMap)) {
-            $directories = \array_filter(
-                \array_unique($this->directories),
-                'is_readable'
-            );
-            $classMapCacheFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
-
-            ClassMapGenerator::dump($directories, $classMapCacheFile);
+            $classMap = $this->generateClassMap();
         }
 
-        return require $this->classMapCacheFile->getRealPath();
+        return $classMap;
+    }
+
+    /**
+     * Generate classmap file references.
+     *
+     * @return string[]
+     */
+    private function generateClassMap()
+    {
+        $directories = \array_filter(
+            \array_unique($this->directories),
+            'is_readable'
+        );
+        $classMapCacheFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
+
+        ClassMapGenerator::dump($directories, $classMapCacheFile);
+
+        return $this->includeClassMap();
+    }
+
+    /**
+     * Load file with classmap array references.
+     *
+     * @return string[]
+     */
+    private function includeClassMap()
+    {
+        return include $this->classMapCacheFile->getRealPath();
     }
 }
