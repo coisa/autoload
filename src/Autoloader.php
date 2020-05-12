@@ -13,10 +13,8 @@
 
 namespace CoiSA\Autoload;
 
+use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
 use Composer\Autoload\ClassLoader;
-use Composer\Autoload\ClassMapGenerator;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 /**
  * Class Autoloader
@@ -28,49 +26,21 @@ final class Autoloader implements AutoloaderInterface
     /** @var ClassLoader */
     private $classLoader;
 
-    /** @var \SplFileInfo */
-    private $classMapCacheFile;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var string[] */
-    private $directories = array();
+    /** @var ClassMapGeneratorInterface */
+    private $classMapGenerator;
 
     /**
      * Autoloader constructor.
      *
-     * @param ClassLoader          $classLoader
-     * @param string               $classMapCacheFile
-     * @param null|LoggerInterface $logger
+     * @param ClassLoader                $classLoader
+     * @param ClassMapGeneratorInterface $classMapGenerator
      */
     public function __construct(
         ClassLoader $classLoader,
-        $classMapCacheFile,
-        LoggerInterface $logger = null
+        ClassMapGeneratorInterface $classMapGenerator
     ) {
         $this->classLoader       = $classLoader;
-        $this->classMapCacheFile = new \SplFileInfo($classMapCacheFile);
-        $this->logger            = $logger ?: new NullLogger();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addDirectory($path)
-    {
-        if (false === \is_dir($path)) {
-            $this->logger->error(
-                'Could not scan for classes inside "{path}" which does not appear to be a folder.',
-                \compact('path')
-            );
-
-            return false;
-        }
-
-        $this->directories[] = \realpath($path);
-
-        return true;
+        $this->classMapGenerator = $classMapGenerator;
     }
 
     /**
@@ -78,53 +48,8 @@ final class Autoloader implements AutoloaderInterface
      */
     public function register()
     {
-        $classMap = $this->getClassMap();
+        $classMap = $this->classMapGenerator->getClassMap();
+
         $this->classLoader->addClassMap($classMap);
-    }
-
-    /**
-     * Return classmap array references.
-     *
-     * @return string[]
-     */
-    private function getClassMap()
-    {
-        if ($this->classMapCacheFile->isFile()) {
-            $classMap = $this->includeClassMap();
-        }
-
-        if (empty($classMap)) {
-            $classMap = $this->generateClassMap();
-        }
-
-        return $classMap;
-    }
-
-    /**
-     * Generate classmap file references.
-     *
-     * @return string[]
-     */
-    private function generateClassMap()
-    {
-        $directories = \array_filter(
-            \array_unique($this->directories),
-            'is_readable'
-        );
-        $classMapCacheFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
-
-        ClassMapGenerator::dump($directories, $classMapCacheFile);
-
-        return $this->includeClassMap();
-    }
-
-    /**
-     * Load file with classmap array references.
-     *
-     * @return string[]
-     */
-    private function includeClassMap()
-    {
-        return include $this->classMapCacheFile->getRealPath();
     }
 }

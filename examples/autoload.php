@@ -19,10 +19,12 @@ $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     )
 );
 
-$classMapCacheFile = \dirname(__DIR__) . '/vendor/composer/autoload_classmap_example.php';
+$classMapFilePath = \dirname(__DIR__) . '/vendor/composer/autoload_classmap_example.php';
 
-$autoloader = new CoiSA\Autoload\Autoloader($classLoader, $classMapCacheFile, $logger);
-$autoloader->addDirectory(\dirname(__DIR__) . '/tests/stubs');
+$classMapGenerator = new CoiSA\Autoload\Generator\ClassMapFileGenerator($classMapFilePath, $logger);
+$classMapGenerator->addDirectory(\dirname(__DIR__) . '/tests/stubs');
+
+$autoloader = new CoiSA\Autoload\Autoloader($classLoader, $classMapGenerator);
 $autoloader->register();
 
 $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();
