@@ -11,9 +11,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-$cache = new Cache\Adapter\PHPArray\ArrayCachePool();
+$classLoader = require \dirname(__DIR__) . '/vendor/autoload.php';
 
 $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     new Symfony\Component\Console\Output\ConsoleOutput(
@@ -21,8 +19,10 @@ $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     )
 );
 
-$autoloader = new CoiSA\Autoload\Autoloader($cache, $logger);
-$autoloader->addDirectory(__DIR__);
+$classMapCacheFile = \dirname(__DIR__) . '/vendor/composer/autoload_classmap_example.php';
+
+$autoloader = new CoiSA\Autoload\Autoloader($classLoader, $classMapCacheFile, $logger);
+$autoloader->addDirectory(\dirname(__DIR__) . '/tests/stubs');
 $autoloader->register();
 
 $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();

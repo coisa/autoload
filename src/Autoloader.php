@@ -13,11 +13,10 @@
 
 namespace CoiSA\Autoload;
 
-use CoiSA\Autoload\Iterator\RecursiveDirectoryAppendIteratorAggregate;
+use Composer\Autoload\ClassLoader;
 use Composer\Autoload\ClassMapGenerator;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class Autoloader
@@ -26,28 +25,33 @@ use Psr\SimpleCache\CacheInterface;
  */
 final class Autoloader implements AutoloaderInterface
 {
-    /** @var CacheInterface */
-    private $cache;
+    /** @var ClassLoader */
+    private $classLoader;
+
+    /** @var \SplFileInfo */
+    private $classMapCacheFile;
 
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var \Iterator */
-    private $directories;
+    /** @var string[] */
+    private $directories = array();
 
     /**
      * Autoloader constructor.
      *
-     * @param CacheInterface       $cache
+     * @param ClassLoader          $classLoader
+     * @param string               $classMapCacheFile
      * @param null|LoggerInterface $logger
      */
     public function __construct(
-        CacheInterface $cache,
+        ClassLoader $classLoader,
+        $classMapCacheFile,
         LoggerInterface $logger = null
     ) {
-        $this->cache       = $cache;
-        $this->logger      = $logger ?: new NullLogger();
-        $this->directories = new RecursiveDirectoryAppendIteratorAggregate();
+        $this->classLoader       = $classLoader;
+        $this->classMapCacheFile = new \SplFileInfo($classMapCacheFile);
+        $this->logger            = $logger ?: new NullLogger();
     }
 
     /**
@@ -64,21 +68,9 @@ final class Autoloader implements AutoloaderInterface
             return false;
         }
 
-        $this->directories->append($path);
+        $this->directories[] = \realpath($path);
 
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function loadClass($class)
-    {
-        if ($this->tryLoadFromCache($class)) {
-            return true;
-        }
-
-        return $this->tryLoad($class);
     }
 
     /**
@@ -86,129 +78,29 @@ final class Autoloader implements AutoloaderInterface
      */
     public function register()
     {
-        return \spl_autoload_register(array($this, 'loadClass'), true, false);
+        $classMap = $this->getClassMap();
+        $this->classLoader->addClassMap($classMap);
     }
 
     /**
-     * {@inheritDoc}
+     * @return string[]
      */
-    public function unregister()
+    private function getClassMap()
     {
-        return \spl_autoload_unregister(array($this, 'loadClass'));
-    }
-
-    /**
-     * Warm up cache.
-     *
-     * It will warm up all found classes on PHP files of each directory.
-     */
-    public function cacheWarmUp()
-    {
-        /** @var \SplFileInfo $file */
-        foreach ($this->directories as $file) {
-            $this->cacheFileClassMap($file);
-        }
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return bool
-     */
-    private function tryLoadFromCache($class)
-    {
-        $cacheKey = $this->getCacheKey($class);
-
-        if (false === $this->cache->has($cacheKey)) {
-            return false;
+        if ($this->classMapCacheFile->isFile()) {
+            $classMap = require $this->classMapCacheFile->getRealPath();
         }
 
-        $file = $this->cache->get($cacheKey);
-        $this->loadClassInFile($class, $file);
+        if (empty($classMap)) {
+            $directories = \array_filter(
+                \array_unique($this->directories),
+                'is_readable'
+            );
+            $classMapCacheFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
 
-        return true;
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return string
-     */
-    private function getCacheKey($class)
-    {
-        return \str_replace('\\', '|', \ltrim($class, '\\'));
-    }
-
-    /**
-     * @param string $class
-     * @param string $file
-     */
-    private function loadClassInFile($class, $file)
-    {
-        require_once $file;
-
-        $this->logger->info(
-            'Class resolution, "{class}" found in "{file}" was loaded.',
-            \compact('class', 'file')
-        );
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return null|bool
-     */
-    private function tryLoad($class)
-    {
-        /** @var \SplFileInfo $file */
-        foreach ($this->directories as $file) {
-            $this->cacheFileClassMap($file);
-
-            if (false === $this->tryLoadFromCache($class)) {
-                continue;
-            }
-
-            return true;
-        }
-    }
-
-    /**
-     * @param \SplFileInfo $file
-     */
-    private function cacheFileClassMap(\SplFileInfo $file)
-    {
-        $classMap = ClassMapGenerator::createMap($file->getRealPath());
-
-        foreach ($classMap as $fqcn => $path) {
-            $this->cacheClassReference($fqcn, $path);
-        }
-    }
-
-    /**
-     * @param string $class
-     * @param string $path
-     *
-     * @return bool
-     */
-    private function cacheClassReference($class, $path)
-    {
-        $cacheKey = $this->getCacheKey($class);
-
-        if (false === $this->cache->has($cacheKey)) {
-            return $this->cache->set($cacheKey, $path);
+            ClassMapGenerator::dump($directories, $classMapCacheFile);
         }
 
-        $file = $this->cache->get($cacheKey);
-
-        if ($path === $file) {
-            return true;
-        }
-
-        $this->logger->warning(
-            'Ambiguous class resolution, "{class}" was found in both "{file}" and "{path}", the first will be used.',
-            compact('class', 'path', 'file')
-        );
-
-        return false;
+        return require $this->classMapCacheFile->getRealPath();
     }
 }

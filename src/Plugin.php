@@ -1,6 +1,17 @@
 <?php
 
-namespace CoiSA\Autoload\Composer\Plugin;
+/**
+ * This file is part of coisa/autoload.
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @link      https://github.com/coisa/autoload
+ * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @license   https://opensource.org/licenses/MIT MIT License
+ */
+
+namespace CoiSA\Autoload;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -9,20 +20,19 @@ use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
-use Symfony\Component\Finder\Finder;
 
 /**
- * Class RecursiveClassMapAutoloadPlugin
+ * Class Plugin
  *
- * @package CoiSA\Autoload\Composer\Plugin
+ * @package CoiSA\Autoload
  */
-final class RecursiveClassMapAutoloadPlugin implements PluginInterface, EventSubscriberInterface
+final class Plugin implements PluginInterface, EventSubscriberInterface
 {
     /** @var Composer */
-    protected $composer;
+    private $composer;
 
     /** @var IOInterface */
-    protected $io;
+    private $io;
 
     /**
      * {@inheritDoc}
@@ -30,7 +40,7 @@ final class RecursiveClassMapAutoloadPlugin implements PluginInterface, EventSub
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
-        $this->io = $io;
+        $this->io       = $io;
     }
 
     /**
@@ -39,8 +49,8 @@ final class RecursiveClassMapAutoloadPlugin implements PluginInterface, EventSub
     public static function getSubscribedEvents()
     {
         return array(
-            //ScriptEvents::POST_AUTOLOAD_DUMP => 'generateClassMap',
             PackageEvents::POST_PACKAGE_INSTALL => 'updateAutoloadClassMap',
+            PackageEvents::POST_PACKAGE_UPDATE  => 'updateAutoloadClassMap',
         );
     }
 
@@ -49,26 +59,14 @@ final class RecursiveClassMapAutoloadPlugin implements PluginInterface, EventSub
      */
     public function updateAutoloadClassMap(PackageEvent $event)
     {
-        $package = $event->getComposer()->getPackage();
-        $extra = $package->getExtra();
+        $package           = $event->getComposer()->getPackage();
+        $extra             = $package->getExtra();
         $classMapRootPaths = $this->getExtraMetadata($extra);
-        $paths = array_filter($classMapRootPaths, 'is_dir');
+        $paths             = \array_filter($classMapRootPaths, 'is_dir');
 
         if (empty($paths)) {
             return;
         }
-
-        $finder = Finder::create()
-            ->directories()
-            ->followLinks()
-            ->ignoreVCS(true)
-            ->in($paths)
-            ->append($paths)
-        ;
-
-        $autoload = $package->getAutoload();
-        $autoload['classmap'] = $autoload['classmap'] + iterator_to_array($finder);
-        $package->setAutoload($autoload);
     }
 
     /**
@@ -82,7 +80,7 @@ final class RecursiveClassMapAutoloadPlugin implements PluginInterface, EventSub
             return array();
         }
 
-        if (is_string($extra['autoload']['recursive-classmap'])) {
+        if (\is_string($extra['autoload']['recursive-classmap'])) {
             return array($extra['autoload']['recursive-classmap']);
         }
 

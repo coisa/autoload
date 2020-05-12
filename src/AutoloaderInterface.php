@@ -30,25 +30,9 @@ interface AutoloaderInterface
     public function addDirectory($path);
 
     /**
-     * Loads the given class or interface.
-     *
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function loadClass($class);
-
-    /**
      * Registers this instance as an autoloader.
      *
      * @return bool
      */
     public function register();
-
-    /**
-     * Unregisters this instance as an autoloader.
-     *
-     * @return bool
-     */
-    public function unregister();
 }

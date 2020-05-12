@@ -13,11 +13,9 @@
         "php": ">=5.3",
         "composer-plugin-api": "^1.1",
         "composer/composer": "^1.10",
-        "psr/log": "^1.1",
-        "psr/simple-cache": "^1.0"
+        "psr/log": "^1.1"
     },
     "require-dev": {
-        "cache/array-adapter": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.16",
         "jangregor/phpstan-prophecy": "^0.6.2",
         "malukenho/docheader": "^0.1.8",
@@ -56,6 +54,6 @@
         "test": "phpunit --color=always"
     },
     "extra": {
-        "class": "CoiSA\\Autoload\\Composer\\Plugin\\RecursiveClassMapAutoloadPlugin"
+        "class": "CoiSA\\Autoload\\Plugin"
     }
 }
