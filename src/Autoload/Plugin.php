@@ -13,13 +13,12 @@
 
 namespace CoiSA\Autoload;
 
+use CoiSA\Autoload\Generator\ClassMapGeneratorFactory;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Installer\PackageEvent;
-use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\Event;
+use Composer\Script\ScriptEvents;
 
 /**
  * Class Plugin
@@ -49,41 +48,28 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            PackageEvents::POST_PACKAGE_INSTALL => 'updateAutoloadClassMap',
-            PackageEvents::POST_PACKAGE_UPDATE  => 'updateAutoloadClassMap',
+            ScriptEvents::PRE_AUTOLOAD_DUMP => array(
+                'removeAutoloadClassmapDefault',
+                'createAutoloadClassmapDefault'
+            ),
         );
     }
 
     /**
-     * @param Event $event
+     * @param ScriptEvents $event
      */
-    public function updateAutoloadClassMap(PackageEvent $event)
+    public function removeAutoloadClassmapDefault(ScriptEvents $event)
     {
-        $package           = $event->getComposer()->getPackage();
-        $extra             = $package->getExtra();
-        $classMapRootPaths = $this->getExtraMetadata($extra);
-        $paths             = \array_filter($classMapRootPaths, 'is_dir');
+        $classMapPath = ClassMapGeneratorFactory::getClassMapDefaultPath();
 
-        if (empty($paths)) {
-            return;
-        }
+        @\unlink($classMapPath);
     }
 
     /**
-     * @param array $extra
-     *
-     * @return array
+     * @param ScriptEvents $event
      */
-    private function getExtraMetadata(array $extra)
+    public function createAutoloadClassmapDefault(ScriptEvents $event)
     {
-        if (!isset($extra['autoload']) || !isset($extra['autoload']['recursive-classmap'])) {
-            return array();
-        }
-
-        if (\is_string($extra['autoload']['recursive-classmap'])) {
-            return array($extra['autoload']['recursive-classmap']);
-        }
-
-        return $extra['autoload']['recursive-classmap'];
+        // @TODO recreate classmap based on extra composer configs
     }
 }
