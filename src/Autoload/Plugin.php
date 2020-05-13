@@ -13,7 +13,6 @@
 
 namespace CoiSA\Autoload;
 
-use CoiSA\Autoload\Generator\ClassMapGeneratorFactory;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
