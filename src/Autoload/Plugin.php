@@ -49,27 +49,14 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ScriptEvents::PRE_AUTOLOAD_DUMP => array(
-                array('removeAutoloadClassmapDefault'),
-                array('createAutoloadClassmapDefault'),
-            ),
+            ScriptEvents::PRE_AUTOLOAD_DUMP => 'generateClassMapFromComposerExtra',
         );
     }
 
     /**
      * @param ScriptEvents $event
      */
-    public function removeAutoloadClassmapDefault(Event $event)
-    {
-        $classMapPath = ClassMapGeneratorFactory::getClassMapDefaultPath();
-
-        @\unlink($classMapPath);
-    }
-
-    /**
-     * @param ScriptEvents $event
-     */
-    public function createAutoloadClassmapDefault(Event $event)
+    public function generateClassMapFromComposerExtra(Event $event)
     {
         $extra = $event->getComposer()->getConfig()->get('extra');
 
