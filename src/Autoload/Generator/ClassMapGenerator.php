@@ -15,14 +15,13 @@ namespace CoiSA\Autoload\Generator;
 
 use Composer\Autoload\ClassMapGenerator as ComposerClassMapGenerator;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 /**
  * Class ClassMapFileGenerator
  *
  * @package CoiSA\Autoload\Generator
  */
-final class ClassMapFileGenerator implements ClassMapGeneratorInterface
+final class ClassMapGenerator implements ClassMapGeneratorInterface
 {
     /** @var \SplFileInfo */
     private $classMapCacheFile;
@@ -37,14 +36,14 @@ final class ClassMapFileGenerator implements ClassMapGeneratorInterface
      * ClassMapFileGenerator constructor.
      *
      * @param $classMapCacheFile
-     * @param null|LoggerInterface $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(
         $classMapCacheFile,
-        LoggerInterface $logger = null
+        LoggerInterface $logger
     ) {
         $this->classMapCacheFile = new \SplFileInfo($classMapCacheFile);
-        $this->logger            = $logger ?: new NullLogger();
+        $this->logger            = $logger;
     }
 
     /**
@@ -91,11 +90,16 @@ final class ClassMapFileGenerator implements ClassMapGeneratorInterface
             \array_unique($this->directories),
             'is_readable'
         );
-        $classMapCacheFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
+        $classMapFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
 
-        ComposerClassMapGenerator::dump($directories, $classMapCacheFile);
+        ComposerClassMapGenerator::dump($directories, $classMapFile);
 
-        return $this->includeClassMap();
+        $classMapFile = $this->classMapCacheFile->getRealPath();
+        $classMap = $this->includeClassMap();
+
+        $this->logger->notice('Classmpa "{classMapFile}" was created.', \compact('classMapFile', 'classMap'));
+
+        return $classMap;
     }
 
     /**

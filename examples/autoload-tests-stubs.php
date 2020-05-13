@@ -13,18 +13,13 @@
 
 require \dirname(__DIR__) . '/src/bootstrap.php';
 
-$logger = new Symfony\Component\Console\Logger\ConsoleLogger(
-    new Symfony\Component\Console\Output\ConsoleOutput(
-        Symfony\Component\Console\Output\OutputInterface::VERBOSITY_DEBUG
-    )
-);
+$logger = require 'logger.php';
 
 $directories = array(
-    \dirname(__DIR__) . '/tests/stubs'
+    \dirname(__DIR__) . '/tests/stubs',
 );
 
-$autoloader = CoiSA\Autoload\Factory::createAutoloader($directories, $logger);
-$autoloader->register();
+CoiSA\Autoload\Factory::createAutoloader($directories, $logger)->register();
 
 $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();
 $stub2 = new CoiSA\Autoload\Example\Stub\AnotherUnknowClassFile();

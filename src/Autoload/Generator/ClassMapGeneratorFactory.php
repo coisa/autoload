@@ -37,14 +37,14 @@ final class ClassMapGeneratorFactory
      * @param null                 $path
      * @param null|LoggerInterface $logger
      *
-     * @return ClassMapFileGenerator
+     * @return ClassMapGenerator
      */
     public static function factory(
         array $directories = array(),
         $path = null,
         LoggerInterface $logger = null
     ) {
-        $classMapFileGenerator = new ClassMapFileGenerator(
+        $classMapFileGenerator = new ClassMapGenerator(
             $path ?: self::getClassMapDefaultPath(),
             $logger
         );

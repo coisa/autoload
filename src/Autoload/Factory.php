@@ -13,7 +13,7 @@
 
 namespace CoiSA\Autoload;
 
-use CoiSA\Autoload\Generator\ClassMapFileGenerator;
+use CoiSA\Autoload\Generator\ClassMapGenerator;
 use CoiSA\Autoload\Generator\ClassMapGeneratorFactory;
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
 use Psr\Log\LoggerInterface;
@@ -29,7 +29,7 @@ final class Factory
      * @param array                $directories
      * @param null|LoggerInterface $logger
      *
-     * @return ClassMapFileGenerator
+     * @return ClassMapGenerator
      */
     public static function createClassMapFileGenerator(
         array $directories = array(),

@@ -15,6 +15,7 @@ namespace CoiSA\Autoload;
 
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
 use Composer\Autoload\ClassLoader;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Autoloader
@@ -29,18 +30,24 @@ final class Autoloader implements AutoloaderInterface
     /** @var ClassMapGeneratorInterface */
     private $classMapGenerator;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * Autoloader constructor.
      *
      * @param ClassMapGeneratorInterface $classMapGenerator
      * @param ClassLoader                $classLoader
+     * @param LoggerInterface            $logger
      */
     public function __construct(
         ClassMapGeneratorInterface $classMapGenerator,
-        ClassLoader $classLoader
+        ClassLoader $classLoader,
+        LoggerInterface $logger
     ) {
         $this->classMapGenerator = $classMapGenerator;
         $this->classLoader       = $classLoader;
+        $this->logger            = $logger;
     }
 
     /**
@@ -49,6 +56,9 @@ final class Autoloader implements AutoloaderInterface
     public function register()
     {
         $classMap = $this->classMapGenerator->getClassMap();
+
+        $this->logger->debug('ClassMap added to autoloader.', \compact('classMap'));
+
         $this->classLoader->addClassMap($classMap);
     }
 }
