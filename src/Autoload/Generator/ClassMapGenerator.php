@@ -17,7 +17,7 @@ use Composer\Autoload\ClassMapGenerator as ComposerClassMapGenerator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ClassMapFileGenerator
+ * Class ClassMapGenerator
  *
  * @package CoiSA\Autoload\Generator
  */
@@ -33,9 +33,9 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     private $directories = array();
 
     /**
-     * ClassMapFileGenerator constructor.
+     * ClassMapGenerator constructor.
      *
-     * @param $classMapCacheFile
+     * @param string          $classMapCacheFile
      * @param LoggerInterface $logger
      */
     public function __construct(
