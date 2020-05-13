@@ -80,11 +80,6 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         }
 
         $classMapGenerator = Factory::createClassMapFileGenerator($extra['coisa']['autoload']);
-
-        foreach ($extra['coisa']['autoload'] as $directory) {
-            $classMapGenerator->addDirectory($directory);
-        }
-
         $classMapGenerator->generateClassMap();
     }
 }
