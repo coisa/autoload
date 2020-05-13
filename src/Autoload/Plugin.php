@@ -57,7 +57,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function generateClassMapFromComposerExtra(Event $event)
     {
-        $extra = $event->getComposer()->getConfig()->get('extra');
+        $extra = $event->getComposer()->getPackage()->getExtra();
 
         if (false === \array_key_exists('coisa', $extra)
             || false === \array_key_exists('autoload', $extra['coisa'])
