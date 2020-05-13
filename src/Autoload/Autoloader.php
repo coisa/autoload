@@ -49,8 +49,6 @@ final class Autoloader implements AutoloaderInterface
     public function register()
     {
         $classMap = $this->classMapGenerator->getClassMap();
-
         $this->classLoader->addClassMap($classMap);
-        $this->classLoader->register();
     }
 }
