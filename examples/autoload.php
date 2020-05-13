@@ -11,7 +11,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-$classLoader = require \dirname(__DIR__) . '/vendor/autoload.php';
+$classLoader = require \dirname(__DIR__) . '/src/bootstrap.php';
 
 $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     new Symfony\Component\Console\Output\ConsoleOutput(
