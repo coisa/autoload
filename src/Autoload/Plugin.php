@@ -18,6 +18,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 /**
@@ -49,8 +50,8 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     {
         return array(
             ScriptEvents::PRE_AUTOLOAD_DUMP => array(
-                'removeAutoloadClassmapDefault',
-                'createAutoloadClassmapDefault'
+                array('removeAutoloadClassmapDefault'),
+                array('createAutoloadClassmapDefault'),
             ),
         );
     }
@@ -58,7 +59,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * @param ScriptEvents $event
      */
-    public function removeAutoloadClassmapDefault(ScriptEvents $event)
+    public function removeAutoloadClassmapDefault(Event $event)
     {
         $classMapPath = ClassMapGeneratorFactory::getClassMapDefaultPath();
 
@@ -68,8 +69,22 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * @param ScriptEvents $event
      */
-    public function createAutoloadClassmapDefault(ScriptEvents $event)
+    public function createAutoloadClassmapDefault(Event $event)
     {
-        // @TODO recreate classmap based on extra composer configs
+        $extra = $event->getComposer()->getConfig()->get('extra');
+
+        if (false === \array_key_exists('coisa', $extra)
+            || false === \array_key_exists('autoload', $extra['coisa'])
+        ) {
+            return;
+        }
+
+        $classMapGenerator = Factory::createClassMapFileGenerator($extra['coisa']['autoload']);
+
+        foreach ($extra['coisa']['autoload'] as $directory) {
+            $classMapGenerator->addDirectory($directory);
+        }
+
+        $classMapGenerator->generateClassMap();
     }
 }
