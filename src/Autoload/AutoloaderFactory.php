@@ -36,7 +36,7 @@ final class AutoloaderFactory
         $logger = $logger ?: new NullLogger();
 
         $classMapGenerator = $directories instanceof ClassMapGeneratorInterface ?
-            $directories : Factory::createClassMapFileGenerator(
+            $directories : Factory::createClassMapGenerator(
                 $directories,
                 $logger
             );

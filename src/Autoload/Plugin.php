@@ -27,38 +27,38 @@ use Composer\Script\ScriptEvents;
  */
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    /** @var Composer */
-    private $composer;
-
-    /** @var IOInterface */
-    private $io;
-
     /**
      * {@inheritDoc}
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->composer = $composer;
-        $this->io       = $io;
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {
         return array(
-            ScriptEvents::PRE_AUTOLOAD_DUMP => 'generateClassMapFromIncludePath',
+            ScriptEvents::PRE_AUTOLOAD_DUMP => 'generateClassMapFromExtra',
         );
     }
 
     /**
      * @param ScriptEvents $event
      */
-    public function generateClassMapFromIncludePath(Event $event)
+    public function generateClassMapFromExtra(Event $event)
     {
-        $directories       = $event->getComposer()->getPackage()->getIncludePaths();
-        $classMapGenerator = Factory::createClassMapFileGenerator($directories);
+        $extra = \array_merge(
+            array('coisa' => array('autoload' => array())),
+            $event->getComposer()->getPackage()->getExtra()
+        );
+
+        if (empty($extra['coisa']['autoload'])) {
+            return;
+        }
+
+        $classMapGenerator = Factory::createClassMapGenerator($extra['coisa']['autoload']);
         $classMapGenerator->generateClassMap();
     }
 }

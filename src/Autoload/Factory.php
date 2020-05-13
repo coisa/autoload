@@ -31,7 +31,7 @@ final class Factory
      *
      * @return ClassMapGenerator
      */
-    public static function createClassMapFileGenerator(
+    public static function createClassMapGenerator(
         array $directories = array(),
         LoggerInterface $logger = null
     ) {
