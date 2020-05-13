@@ -1,4 +1,5 @@
 .idea/
+src/autoload_classmap.php
 vendor/
 tests/html/
 tests/clover.xml

@@ -11,7 +11,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-$classLoader = require \dirname(__DIR__) . '/src/bootstrap.php';
+require \dirname(__DIR__) . '/src/bootstrap.php';
 
 $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     new Symfony\Component\Console\Output\ConsoleOutput(
@@ -19,16 +19,11 @@ $logger = new Symfony\Component\Console\Logger\ConsoleLogger(
     )
 );
 
-$classMapFilePath = \dirname(__DIR__) . '/vendor/composer/autoload_classmap_example.php';
+$directories = array(
+    \dirname(__DIR__) . '/tests/stubs'
+);
 
-$classMapGenerator = new CoiSA\Autoload\Generator\ClassMapFileGenerator($classMapFilePath, $logger);
-$classMapGenerator->addDirectory(\dirname(__DIR__) . '/tests/stubs');
-
-// $classLoader->addClassMap($classMapGenerator->getClassMap());
-// or
-// $autoloader = new CoiSA\Autoload\Autoloader($classMapGenerator);
-// or even
-$autoloader = new CoiSA\Autoload\Autoloader($classMapGenerator, $classLoader);
+$autoloader = CoiSA\Autoload\Factory::createAutoloader($directories, $logger);
 $autoloader->register();
 
 $stub1 = new CoiSA\Autoload\Example\Stub\UnknowClassFile();
