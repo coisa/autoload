@@ -97,7 +97,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
         $classMapFile = $this->classMapCacheFile->getRealPath();
         $classMap     = $this->includeClassMap();
 
-        $this->logger->notice('Classmpa "{classMapFile}" was created.', \compact('classMapFile', 'classMap'));
+        $this->logger->notice('Classmap "{classMapFile}" was created.', \compact('classMapFile', 'classMap'));
 
         return $classMap;
     }

@@ -13,7 +13,8 @@
 
 require \dirname(__DIR__) . '/src/bootstrap.php';
 
-$logger = require 'logger.php';
+/** @var Psr\Log\LoggerInterface $logger */
+$logger = require __DIR__ . '/logger.php';
 
 $directories = array(
     \dirname(__DIR__) . '/tests/stubs',
