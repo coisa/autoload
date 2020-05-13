@@ -42,6 +42,7 @@ final class AutoloaderFactory
             );
 
         $classLoader = new ClassLoader();
+        $classLoader->setUseIncludePath(true);
         $classLoader->register();
 
         return new Autoloader($classMapGenerator, $classLoader, $logger);
