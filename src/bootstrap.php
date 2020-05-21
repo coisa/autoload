@@ -11,17 +11,17 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-if (false === \function_exists('includeIfExists')) {
-    function includeIfExists($file)
-    {
-        return \file_exists($file) ? include $file : false;
+return (function ($autoloadFiles) {
+    $loader = \array_reduce($autoloadFiles, function ($autoloader, $path) {
+        return $autoloader ?? (\file_exists($path) ? require $path : null);
+    });
+
+    if (!$loader) {
+        throw new \RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
     }
-}
 
-if ((!$loader = includeIfExists(__DIR__ . '/../vendor/autoload.php')) && (!$loader = includeIfExists(__DIR__ . '/../../../autoload.php'))) {
-    echo 'You must set up the project dependencies using `composer install`' . PHP_EOL .
-        'See https://getcomposer.org/download/ for instructions on installing Composer' . PHP_EOL;
-    exit(1);
-}
-
-return $loader;
+    return $loader;
+})([
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+]);
