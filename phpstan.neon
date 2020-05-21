@@ -4,4 +4,4 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     level: max
     paths:
-        - %rootDir%/../../../src
+        - %currentWorkingDirectory%/src
