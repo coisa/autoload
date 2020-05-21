@@ -17,11 +17,13 @@ return (function ($autoloadFiles) {
     });
 
     if (!$loader) {
-        throw new \RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+        throw new \RuntimeException(
+            'vendor/autoload.php could not be found. Did you run `php composer.phar install`?'
+        );
     }
 
     return $loader;
-})([
+})(array(
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
-]);
+));
