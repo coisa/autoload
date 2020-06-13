@@ -16,6 +16,7 @@ namespace CoiSA\Autoload;
 use CoiSA\Autoload\Generator\ClassMapGenerator;
 use CoiSA\Autoload\Generator\ClassMapGeneratorFactory;
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
+use Composer\Autoload\ClassLoader;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -27,27 +28,30 @@ final class Factory
 {
     /**
      * @param array                $directories
+     * @param null                 $classMapFilePath
      * @param null|LoggerInterface $logger
      *
      * @return ClassMapGenerator
      */
     public static function createClassMapGenerator(
         array $directories = array(),
+        $classMapFilePath = null,
         LoggerInterface $logger = null
     ) {
-        $classMapFilePath = ClassMapGeneratorFactory::getClassMapDefaultPath();
+        $classMapFilePath = $classMapFilePath ?: ClassMapGeneratorFactory::getClassMapDefaultPath();
 
         return ClassMapGeneratorFactory::factory($directories, $classMapFilePath, $logger);
     }
 
     /**
-     * @param ClassMapGeneratorInterface|string[] $directories
-     * @param null|LoggerInterface                $logger
+     * @param array|ClassMapGeneratorInterface $directories
+     * @param ClassLoader                      $classLoader
+     * @param null|LoggerInterface             $logger
      *
      * @return Autoloader
      */
-    public static function createAutoloader($directories = array(), LoggerInterface $logger = null)
+    public static function createAutoloader($directories, ClassLoader $classLoader, LoggerInterface $logger = null)
     {
-        return AutoloaderFactory::factory($directories, $logger);
+        return AutoloaderFactory::factory($directories, $classLoader, $logger);
     }
 }

@@ -26,24 +26,22 @@ use Psr\Log\NullLogger;
 final class AutoloaderFactory
 {
     /**
-     * @param ClassMapGeneratorInterface|string[] $directories
-     * @param null|LoggerInterface                $logger
+     * @param array                $directories
+     * @param ClassLoader          $classLoader
+     * @param null|LoggerInterface $logger
      *
      * @return Autoloader
      */
-    public static function factory($directories = array(), LoggerInterface $logger = null)
+    public static function factory($directories, ClassLoader $classLoader, LoggerInterface $logger = null)
     {
         $logger = $logger ?: new NullLogger();
 
         $classMapGenerator = $directories instanceof ClassMapGeneratorInterface ?
             $directories : Factory::createClassMapGenerator(
                 $directories,
+                null,
                 $logger
             );
-
-        $classLoader = new ClassLoader();
-        $classLoader->setUseIncludePath(true);
-        $classLoader->register();
 
         return new Autoloader($classMapGenerator, $classLoader, $logger);
     }

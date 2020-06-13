@@ -11,18 +11,23 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
+/*
+ * @param string[] $autoloadFiles
+ *
+ * @return Composer\Autoload\ClassLoader
+ *
+ * @throws \RuntimeException When could not found any near composer ClassLoader autoloader file.
+ */
 return (function ($autoloadFiles) {
-    $loader = \array_reduce($autoloadFiles, function ($autoloader, $path) {
-        return $autoloader ?? (\file_exists($path) ? require $path : null);
-    });
-
-    if (!$loader) {
-        throw new \RuntimeException(
-            'vendor/autoload.php could not be found. Did you run `php composer.phar install`?'
-        );
+    foreach ($autoloadFiles as $autoloadFile) {
+        if (\file_exists($autoloadFile)) {
+            return require $autoloadFile;
+        }
     }
 
-    return $loader;
+    throw new \RuntimeException(
+        'vendor/autoload.php could not be found. Did you run `php composer.phar install`?'
+    );
 })(array(
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',

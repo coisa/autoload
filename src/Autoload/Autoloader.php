@@ -55,10 +55,19 @@ final class Autoloader implements AutoloaderInterface
      */
     public function register()
     {
-        $classMap = $this->classMapGenerator->getClassMap();
-
-        $this->logger->debug('ClassMap added to autoloader.', \compact('classMap'));
+        $classMap = $this->getClassMap();
 
         $this->classLoader->addClassMap($classMap);
+        $this->classLoader->register();
+
+        $this->logger->debug('ClassMap added to autoloader.', \compact('classMap'));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getClassMap()
+    {
+        return $this->classMapGenerator->getClassMap();
     }
 }

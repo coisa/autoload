@@ -1,4 +1,5 @@
 .idea/
+examples/custom_autoload_classmap_file_path.php
 src/autoload_classmap.php
 vendor/
 tests/html/
