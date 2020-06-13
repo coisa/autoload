@@ -13,28 +13,11 @@
 
 namespace Coisa\Autoload;
 
-/**
- * Class Config
- *
- * @package Coisa\Autoload
- */
-final class ConfigProvider
-{
-    /**
-     * @return mixed[]
-     */
-    public function __invoke()
-    {
-        return array(
-            'directories' => array(
-                __DIR__,
-                \dirname(__DIR__) . '/tests/stubs',
-            ),
-            'custom_autoload_path' => __DIR__ . '/custom_autoload_classmap_file_path.php',
-        );
-    }
-}
+return array(
+    'custom_autoload_path' => dirname(__DIR__) . '/resource/custom_autoload_classmap_file_path.php',
 
-$configProvider = new ConfigProvider();
-
-return $configProvider();
+    'directories' => array(
+        \dirname(__DIR__) . '/tests/stubs',
+        // \dirname(__DIR__),
+    ),
+);

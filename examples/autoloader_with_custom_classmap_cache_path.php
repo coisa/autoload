@@ -11,8 +11,14 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-require __DIR__ . '/bootstrap.php';
+require \dirname(__DIR__) . '/vendor/autoload.php';
 
+$config = require __DIR__ . '/config.php';
+
+/** @var Psr\Log\LoggerInterface $logger */
+$logger = CoiSA\Autoload\Factory::createLogger(true);
+
+/** @var CoiSA\Autoload\Generator\ClassMapGenerator $classMapGenerator */
 $classMapGenerator = CoiSA\Autoload\Factory::createClassMapGenerator(
     $config['directories'],
     $config['custom_autoload_path'],
@@ -21,9 +27,8 @@ $classMapGenerator = CoiSA\Autoload\Factory::createClassMapGenerator(
 
 $autoloader = CoiSA\Autoload\Factory::createAutoloader(
     $classMapGenerator,
-    $classLoader,
     $logger
 );
+
 $autoloader->register();
 
-var_dump($autoloader->getClassMap());

@@ -11,13 +11,16 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-require __DIR__ . '/bootstrap.php';
+require \dirname(__DIR__) . '/vendor/autoload.php';
+
+$config = require __DIR__ . '/config.php';
+
+/** @var Psr\Log\LoggerInterface $logger */
+$logger = CoiSA\Autoload\Factory::createLogger(true);
 
 $autoloader = CoiSA\Autoload\Factory::createAutoloader(
     $config['directories'],
-    $classLoader,
     $logger
 );
-$autoloader->register();
 
-var_dump($autoloader->getClassMap());
+$autoloader->register();

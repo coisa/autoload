@@ -29,7 +29,7 @@ final class ClassMapGeneratorFactory
      */
     public static function getClassMapDefaultPath()
     {
-        return \dirname(__DIR__) . '/../autoload_classmap.php';
+        return \dirname(__DIR__) . '/../../resource/autoload_classmap.php';
     }
 
     /**
