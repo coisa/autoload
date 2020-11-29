@@ -17,7 +17,7 @@ return array(
     'custom_autoload_path' => dirname(__DIR__) . '/resource/custom_autoload_classmap_file_path.php',
 
     'directories' => array(
-        \dirname(__DIR__) . '/tests/stubs',
+        \dirname(__DIR__) . '/tests/Stubs',
         // \dirname(__DIR__),
     ),
 );
