@@ -7,17 +7,17 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Autoload\Generator;
 
 use Composer\Autoload\ClassMapGenerator as ComposerClassMapGenerator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ClassMapGenerator
+ * Class ClassMapGenerator.
  *
  * @package CoiSA\Autoload\Generator
  */
@@ -47,7 +47,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addDirectory($path)
     {
@@ -66,7 +66,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClassMap()
     {
@@ -82,7 +82,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateClassMap()
     {

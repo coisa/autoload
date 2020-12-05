@@ -7,16 +7,16 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Autoload\Generator;
 
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ClassMapGeneratorFactory
+ * Class ClassMapGeneratorFactory.
  *
  * @package CoiSA\Autoload\Generator
  */

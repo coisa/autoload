@@ -7,10 +7,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Autoload;
 
 use CoiSA\Autoload\Composer\ClassLoaderFactory;
@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Factory
+ * Class Factory.
  *
  * @package CoiSA\Autoload
  */
@@ -72,7 +72,7 @@ final class Factory
     public static function createLogger($isDebug = false)
     {
         $verbosity = $isDebug ? OutputInterface::VERBOSITY_DEBUG : OutputInterface::VERBOSITY_NORMAL;
-        $output = new ConsoleOutput($verbosity);
+        $output    = new ConsoleOutput($verbosity);
 
         return new ConsoleLogger($output);
     }

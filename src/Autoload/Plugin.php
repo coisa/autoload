@@ -7,10 +7,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Autoload;
 
 use Composer\Composer;
@@ -21,21 +21,21 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 /**
- * Class Plugin
+ * Class Plugin.
  *
  * @package CoiSA\Autoload
  */
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function activate(Composer $composer, IOInterface $io)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

@@ -7,10 +7,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Autoload;
 
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
@@ -18,7 +18,7 @@ use Composer\Autoload\ClassLoader;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class Autoloader
+ * Class Autoloader.
  *
  * @package CoiSA\Autoload
  */
@@ -51,7 +51,7 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function register()
     {

@@ -7,12 +7,13 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
 /**
- * Interface TestInterface
+ * Interface TestInterface.
  */
 interface TestInterface
 {
