@@ -35,7 +35,7 @@ final class AutoloaderAbstractFactory implements AutoloadAbstractFactoryInterfac
             $logger = new NullLogger();
         }
 
-        $directories = \func_get_args();
+        $directories       = \func_get_args() ?: array();
         $classLoader       = AbstractFactory::create('Composer\\Autoload\\ClassLoader', $logger);
         $classMapGenerator = AbstractFactory::create(
             'CoiSA\\Autoload\\Generator\\ClassMapGeneratorInterface',
