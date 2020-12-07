@@ -11,13 +11,20 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-namespace Coisa\Autoload;
 
-return array(
-    'custom_autoload_path' => \dirname(__DIR__) . '/resource/custom_autoload_classmap_file_path.php',
+namespace CoiSA\Autoload;
 
-    'directories' => array(
-        \dirname(__DIR__) . '/tests/Stubs',
-        // \dirname(__DIR__),
-    ),
-);
+/**
+ * Interface AutoloaderInterface.
+ *
+ * @package CoiSA\Autoload
+ */
+interface AutoloaderInterface
+{
+    /**
+     * Registers this instance as an autoloader.
+     *
+     * @return void
+     */
+    public function register();
+}

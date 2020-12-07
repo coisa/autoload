@@ -11,17 +11,18 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Autoload\Generator;
 
-use Composer\Autoload\ClassMapGenerator as ComposerClassMapGenerator;
+use Composer\Autoload\ClassMapGenerator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ClassMapGenerator.
+ * Class PhpArrayFileClassMapGenerator.
  *
  * @package CoiSA\Autoload\Generator
  */
-final class ClassMapGenerator implements ClassMapGeneratorInterface
+final class PhpArrayFileClassMapGenerator implements ClassMapGeneratorInterface
 {
     /** @var \SplFileInfo */
     private $classMapCacheFile;
@@ -33,7 +34,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     private $directories = array();
 
     /**
-     * ClassMapGenerator constructor.
+     * PhpArrayFileClassMapGenerator constructor.
      *
      * @param string          $classMapCacheFile
      * @param LoggerInterface $logger
@@ -92,7 +93,7 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
         );
         $classMapFile = $this->classMapCacheFile->getRealPath() ?: $this->classMapCacheFile->getPathname();
 
-        ComposerClassMapGenerator::dump($directories, $classMapFile);
+        ClassMapGenerator::dump($directories, $classMapFile);
 
         $classMapFile = $this->classMapCacheFile->getRealPath();
         $classMap     = $this->includeClassMap();
@@ -100,6 +101,14 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
         $this->logger->notice('Classmap "{classMapFile}" was created.', \compact('classMapFile', 'classMap'));
 
         return $classMap;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**

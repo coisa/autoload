@@ -11,8 +11,9 @@
     ],
     "require": {
         "php": ">=5.3",
-        "composer-plugin-api": "^1.1",
-        "composer/composer": "^1.10",
+        "coisa/exceptions": "^1.0",
+        "coisa/factory": "^1.7",
+        "composer/composer": "^2.0",
         "psr/log": "^1.1"
     },
     "require-dev": {
@@ -30,17 +31,19 @@
     "extra": {
         "branch-alias": {
             "dev-master": "2.x-dev"
-        },
-        "class": "CoiSA\\Autoload\\Plugin"
+        }
     },
     "autoload": {
         "psr-4": {
-            "CoiSA\\Autoload\\": "src/Autoload"
-        }
+            "CoiSA\\Autoload\\": "src"
+        },
+        "files": [
+            "config/autoload.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\": "tests"
+            "CoiSA\\Autoload\\": "tests"
         }
     },
     "minimum-stability": "stable",

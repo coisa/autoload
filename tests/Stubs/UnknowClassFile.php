@@ -11,6 +11,7 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Autoload\Example\Stub;
 
 class UnknowClassFile

@@ -11,12 +11,15 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Autoload\Generator;
+
+use Psr\Log\LoggerAwareInterface;
 
 /**
  * Interface ClassMapGeneratorInterface.
  */
-interface ClassMapGeneratorInterface
+interface ClassMapGeneratorInterface extends LoggerAwareInterface
 {
     /**
      * Add a directory to scan for classes inside PHP files.

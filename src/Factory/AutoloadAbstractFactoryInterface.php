@@ -11,19 +11,16 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-namespace CoiSA\Autoload;
+
+namespace CoiSA\Autoload\Factory;
+
+use CoiSA\Factory\AbstractFactoryInterface;
 
 /**
- * Interface AutoloaderInterface.
+ * Interface AutoloadAbstractFactoryInterface.
  *
- * @package CoiSA\Autoload
+ * @package CoiSA\Autoload\Factory
  */
-interface AutoloaderInterface
+interface AutoloadAbstractFactoryInterface extends AbstractFactoryInterface
 {
-    /**
-     * Registers this instance as an autoloader.
-     *
-     * @return void
-     */
-    public function register();
 }

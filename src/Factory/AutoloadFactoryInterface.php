@@ -11,16 +11,16 @@
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-require \dirname(__DIR__) . '/vendor/autoload.php';
 
-$config = require __DIR__ . '/config.php';
+namespace CoiSA\Autoload\Factory;
 
-/** @var Psr\Log\LoggerInterface $logger */
-$logger = CoiSA\Autoload\Factory::createLogger(true);
+use CoiSA\Factory\FactoryInterface;
 
-$autoloader = CoiSA\Autoload\Factory::createAutoloader(
-    $config['directories'],
-    $logger
-);
-
-$autoloader->register();
+/**
+ * Interface AutoloadFactoryInterface.
+ *
+ * @package CoiSA\Autoload\Factory
+ */
+interface AutoloadFactoryInterface extends FactoryInterface
+{
+}
