@@ -2,8 +2,8 @@
 
 namespace CoiSA\Autoload\Factory;
 
-use _HumbugBoxaf515cad4e15\Psr\Log\NullLogger;
 use CoiSA\Factory\AbstractFactory;
+use Psr\Log\NullLogger;
 
 /**
  * Class ClassLoaderAbstractFactory
