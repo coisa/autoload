@@ -12,68 +12,75 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Autoload;
+namespace CoiSA\Autoload\Factory;
 
+use CoiSA\Autoload\Autoloader;
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
 use Composer\Autoload\ClassLoader;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
- * Class Autoloader.
+ * Class AutoloaderFactory
  *
- * @package CoiSA\Autoload
+ * @package CoiSA\Autoload\Factory
  */
-final class Autoloader implements AutoloaderInterface
+final class AutoloaderFactory implements AutoloadFactoryInterface, LoggerAwareInterface
 {
-    /** @var ClassLoader */
+    /**
+     * @var ClassLoader
+     */
     private $classLoader;
 
-    /** @var ClassMapGeneratorInterface */
+    /**
+     * @var ClassMapGeneratorInterface
+     */
     private $classMapGenerator;
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
-     * Autoloader constructor.
+     * AutoloaderFactory constructor.
      *
      * @param ClassMapGeneratorInterface $classMapGenerator
      * @param ClassLoader                $classLoader
-     * @param LoggerInterface            $logger
+     * @param LoggerInterface|null       $logger
      */
     public function __construct(
         ClassMapGeneratorInterface $classMapGenerator,
         ClassLoader $classLoader,
-        LoggerInterface $logger
+        LoggerInterface $logger = null
     ) {
         $this->classMapGenerator = $classMapGenerator;
         $this->classLoader       = $classLoader;
-        $this->logger            = $logger;
+        $this->logger            = $logger ?: new NullLogger();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function register()
+    public function create()
     {
-        $classMap = $this->getClassMap();
+        $autoloader = new Autoloader(
+            $this->classMapGenerator,
+            $this->classLoader,
+            $this->logger
+        );
 
-        $this->classLoader->addClassMap($classMap);
-        $this->classLoader->register();
+        $autoloader->register();
 
-        foreach ($classMap as $className => $path) {
-            $this->logger->debug(
-                'Class "{className}" found in "{path}" was added to autoloader.',
-                \compact('className', 'path')
-            );
-        }
+        return $autoloader;
     }
 
     /**
-     * @return string[]
+     * @param LoggerInterface $logger
      */
-    public function getClassMap()
+    public function setLogger(LoggerInterface $logger)
     {
-        return $this->classMapGenerator->getClassMap();
+        $this->logger = $logger;
     }
 }

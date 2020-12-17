@@ -12,11 +12,20 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-$paths = array(
-    __FILE__,
-    __DIR__,
-);
+namespace CoiSA\Autoload\Example\Stub;
 
-$header = \file_get_contents(__DIR__ . '/.docheader');
+class UnknowClassFile
+{
+    public function __construct()
+    {
+        echo \get_class($this) . "\n";
+    }
+}
 
-return CoiSA\PhpCsFixer\PhpCsFixer::create($paths, $header);
+class AnotherUnknowClassFile
+{
+    public function __construct()
+    {
+        echo \get_class($this) . "\n";
+    }
+}

@@ -7,17 +7,14 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
 /**
- * Class ClassWithoutNamespace
+ * Interface TestInterface.
  */
-class ClassWithoutNamespace
+interface TestInterface
 {
-    public function __construct()
-    {
-        echo \get_class($this) . "\n";
-    }
 }

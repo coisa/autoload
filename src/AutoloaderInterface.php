@@ -7,6 +7,7 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
@@ -14,41 +15,16 @@
 namespace CoiSA\Autoload;
 
 /**
- * Interface AutoloaderInterface
+ * Interface AutoloaderInterface.
  *
  * @package CoiSA\Autoload
  */
 interface AutoloaderInterface
 {
     /**
-     * Add a directory to scan for classes inside PHP files.
-     *
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function addDirectory($path);
-
-    /**
-     * Loads the given class or interface.
-     *
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function loadClass($class);
-
-    /**
      * Registers this instance as an autoloader.
      *
-     * @return bool
+     * @return void
      */
     public function register();
-
-    /**
-     * Unregisters this instance as an autoloader.
-     *
-     * @return bool
-     */
-    public function unregister();
 }

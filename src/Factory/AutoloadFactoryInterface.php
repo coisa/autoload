@@ -7,24 +7,20 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Autoload\Example\Stub;
+namespace CoiSA\Autoload\Factory;
 
-class UnknowClassFile
-{
-    public function __construct()
-    {
-        echo \get_class($this) . "\n";
-    }
-}
+use CoiSA\Factory\FactoryInterface;
 
-class AnotherUnknowClassFile
+/**
+ * Interface AutoloadFactoryInterface.
+ *
+ * @package CoiSA\Autoload\Factory
+ */
+interface AutoloadFactoryInterface extends FactoryInterface
 {
-    public function __construct()
-    {
-        echo \get_class($this) . "\n";
-    }
 }

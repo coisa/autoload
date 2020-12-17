@@ -11,46 +11,52 @@
     ],
     "require": {
         "php": ">=5.3",
-        "composer/composer": "^1.10",
-        "psr/log": "^1.1",
-        "psr/simple-cache": "^1.0"
+        "coisa/exceptions": "^1.0",
+        "coisa/factory": "^1.7",
+        "composer/composer": "^2.0",
+        "psr/log": "^1.1"
     },
     "require-dev": {
-        "cache/array-adapter": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "jangregor/phpstan-prophecy": "^0.6.2",
-        "malukenho/docheader": "^0.1.8",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/phpstan": "^0.12.18",
-        "phpunit/phpunit": "^9.1",
-        "squizlabs/php_codesniffer": "^3.5"
+        "coisa/php-cs-fixer": "^1.0",
+        "php-parallel-lint/php-console-highlighter": "^0.3.2 || ^0.4",
+        "php-parallel-lint/php-parallel-lint": "^1.0",
+        "phpunit/phpunit": "^4.8 || ^7.0",
+        "sensiolabs/security-checker": "^4.1",
+        "squizlabs/php_codesniffer": "^2.9 || ^3.0"
     },
     "config": {
+        "prefer-stable": true,
         "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
     },
     "autoload": {
         "psr-4": {
             "CoiSA\\Autoload\\": "src"
-        }
+        },
+        "files": [
+            "config/autoload.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "CoiSA\\Autoload\\": "src"
+            "CoiSA\\Autoload\\": "tests"
         }
     },
     "minimum-stability": "stable",
     "scripts": {
-        "analyze": "phpstan analyze",
         "check": [
+            "@lint",
             "@test",
             "@sniff",
-            "@cs-check",
-            "@analyze",
-            "@docheader-check"
+            "@cs-check"
         ],
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix",
-        "docheader-check": "docheader check ./src ./tests",
+        "lint": "parallel-lint --exclude vendor .",
         "sniff": "phpcs",
         "test": "phpunit --color=always"
     }

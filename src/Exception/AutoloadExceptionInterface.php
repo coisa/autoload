@@ -12,11 +12,15 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-$paths = array(
-    __FILE__,
-    __DIR__,
-);
+namespace CoiSA\Autoload\Exception;
 
-$header = \file_get_contents(__DIR__ . '/.docheader');
+use CoiSA\Exception\ExceptionInterface;
 
-return CoiSA\PhpCsFixer\PhpCsFixer::create($paths, $header);
+/**
+ * Interface AutoloadExceptionInterface
+ *
+ * @package CoiSA\Autoload\Exception
+ */
+interface AutoloadExceptionInterface extends ExceptionInterface
+{
+}

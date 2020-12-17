@@ -1,7 +1,5 @@
 .idea/
 vendor/
-tests/html/
-tests/clover.xml
-tests/testdox.html
-.*.cache
+*.cache
+composer.phar
 composer.lock
