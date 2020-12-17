@@ -55,7 +55,7 @@ final class ClassLoaderFactory implements AutoloadFactoryInterface, LoggerAwareI
                 continue;
             }
 
-            $this->logger->info('Relying on first ClassLoader found "{realpath}".', array(
+            $this->logger->info('Relying on ClassLoader found in "{realpath}".', array(
                 'realpath' => \realpath($autoloadFile),
             ));
 
