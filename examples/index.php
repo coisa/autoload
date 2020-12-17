@@ -13,20 +13,28 @@
  */
 
 use CoiSA\Factory\AbstractFactory;
+use CoiSA\Factory\ValueFactory;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 require \dirname(__DIR__) . '/vendor/autoload.php';
 
-# Optional (if not set it will save into "../resource/autoload_classmap.php"
-//CoiSA\Autoload\Factory\ClassMapGeneratorAbstractFactory::setClassMapDefaultPath(
-//    \dirname(__DIR__) . '/resource/custom_autoload_classmap_file_path.php'
-//);
+$logger = new ConsoleLogger(
+    new ConsoleOutput(ConsoleOutput::VERBOSITY_DEBUG)
+);
 
-$autoloader = AbstractFactory::create(
+# Optional (if not set will create a Psr\Log\NullLogger instance)
+AbstractFactory::setFactory('Psr\\Log\\LoggerInterface', new ValueFactory($logger));
+
+# Optional (if not set it will save into "../resource/autoload_classmap.php"
+CoiSA\Autoload\Factory\ClassMapGeneratorAbstractFactory::setClassMapDefaultPath(
+    \dirname(__DIR__) . '/resource/custom_autoload_classmap.php'
+);
+
+AbstractFactory::create(
     'CoiSA\\Autoload\\Autoloader',
     \dirname(__DIR__) . '/tests/Stubs'
     // \dirname(__DIR__) . '/other/path/to/lookup',
     // \dirname(__DIR__) . '/another/path/to/lookup',
     // ...,
 );
-
-\var_dump($autoloader->getClassMap());

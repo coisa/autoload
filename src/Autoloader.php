@@ -61,7 +61,12 @@ final class Autoloader implements AutoloaderInterface
         $this->classLoader->addClassMap($classMap);
         $this->classLoader->register();
 
-        $this->logger->debug('ClassMap added to autoloader.', \compact('classMap'));
+        foreach ($classMap as $className => $path) {
+            $this->logger->debug(
+                'Class "{className}" found in "{path}" was added to autoloader.',
+                \compact('className', 'path')
+            );
+        }
     }
 
     /**
