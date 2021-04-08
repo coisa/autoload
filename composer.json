@@ -20,7 +20,7 @@
         "coisa/php-cs-fixer": "^1.0",
         "php-parallel-lint/php-console-highlighter": "^0.3.2 || ^0.4 || ^0.5",
         "php-parallel-lint/php-parallel-lint": "^1.0",
-        "phpunit/phpunit": "^4.8 || ^7.0 || ^6.0",
+        "phpunit/phpunit": "^4.8 || ^7.0 || ^6.0 || ^9.0",
         "sensiolabs/security-checker": "^4.1 || ^5.0",
         "squizlabs/php_codesniffer": "^2.9 || ^3.0"
     },
