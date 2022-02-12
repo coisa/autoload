@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
- * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
@@ -21,7 +21,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 /**
- * Class Plugin
+ * Class Plugin.
  *
  * @package CoiSA\Autoload
  */
@@ -54,11 +54,17 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
             $event->getComposer()->getPackage()->getExtra()
         );
 
-        if (empty($extra['coisa']['autoload'])) {
+        $autoloadConfig = $extra['coisa']['autoload'];
+
+        if (empty($autoloadConfig)) {
             return;
         }
 
-        $classMapGenerator = Factory::createClassMapGenerator($extra['coisa']['autoload']);
+        $classMapGenerator = Factory::createClassMapGenerator(
+            $autoloadConfig['classmap'] ?: array(),
+            $autoloadConfig['custom_path'] ?: null
+        );
+
         $classMapGenerator->generateClassMap();
     }
 }

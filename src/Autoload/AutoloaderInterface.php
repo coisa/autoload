@@ -14,7 +14,7 @@
 namespace CoiSA\Autoload;
 
 /**
- * Interface AutoloaderInterface
+ * Interface AutoloaderInterface.
  *
  * @package CoiSA\Autoload
  */

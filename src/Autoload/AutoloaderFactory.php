@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 /**
- * Class AutoloaderFactory
+ * Class AutoloaderFactory.
  *
  * @package CoiSA\Autoload
  */

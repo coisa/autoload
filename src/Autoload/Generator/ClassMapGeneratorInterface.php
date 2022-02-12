@@ -14,7 +14,7 @@
 namespace CoiSA\Autoload\Generator;
 
 /**
- * Interface ClassMapGeneratorInterface
+ * Interface ClassMapGeneratorInterface.
  */
 interface ClassMapGeneratorInterface
 {

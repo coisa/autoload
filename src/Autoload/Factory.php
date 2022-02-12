@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
- * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
@@ -19,12 +19,13 @@ use CoiSA\Autoload\Generator\ClassMapGeneratorFactory;
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
 use Composer\Autoload\ClassLoader;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Factory
+ * Class Factory.
  *
  * @package CoiSA\Autoload
  */
@@ -44,7 +45,7 @@ final class Factory
     ) {
         $classMapFilePath = $classMapFilePath ?: ClassMapGeneratorFactory::getClassMapDefaultPath();
 
-        return ClassMapGeneratorFactory::factory($directories, $classMapFilePath, $logger);
+        return ClassMapGeneratorFactory::factory($directories, $classMapFilePath, $logger ?: new NullLogger());
     }
 
     /**
@@ -59,6 +60,7 @@ final class Factory
         LoggerInterface $logger = null,
         ClassLoader $classLoader = null
     ) {
+        $logger      = $logger ?: new NullLogger();
         $classLoader = $classLoader ?: self::createClassLoader($logger);
 
         return AutoloaderFactory::factory($directories, $classLoader, $logger);
@@ -72,18 +74,18 @@ final class Factory
     public static function createLogger($isDebug = false)
     {
         $verbosity = $isDebug ? OutputInterface::VERBOSITY_DEBUG : OutputInterface::VERBOSITY_NORMAL;
-        $output = new ConsoleOutput($verbosity);
+        $output    = new ConsoleOutput($verbosity);
 
         return new ConsoleLogger($output);
     }
 
     /**
-     * @param LoggerInterface|null $logger
+     * @param null|LoggerInterface $logger
      *
      * @return ClassLoader
      */
     public static function createClassLoader(LoggerInterface $logger = null)
     {
-        return ClassLoaderFactory::factory($logger);
+        return ClassLoaderFactory::factory($logger ?: new NullLogger());
     }
 }

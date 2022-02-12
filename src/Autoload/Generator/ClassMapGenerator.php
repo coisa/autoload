@@ -15,9 +15,10 @@ namespace CoiSA\Autoload\Generator;
 
 use Composer\Autoload\ClassMapGenerator as ComposerClassMapGenerator;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
- * Class ClassMapGenerator
+ * Class ClassMapGenerator.
  *
  * @package CoiSA\Autoload\Generator
  */
@@ -35,15 +36,15 @@ final class ClassMapGenerator implements ClassMapGeneratorInterface
     /**
      * ClassMapGenerator constructor.
      *
-     * @param string          $classMapCacheFile
-     * @param LoggerInterface $logger
+     * @param string               $classMapCacheFile
+     * @param null|LoggerInterface $logger
      */
     public function __construct(
         $classMapCacheFile,
-        LoggerInterface $logger
+        LoggerInterface $logger = null
     ) {
         $this->classMapCacheFile = new \SplFileInfo($classMapCacheFile);
-        $this->logger            = $logger;
+        $this->logger            = $logger ?: new NullLogger();
     }
 
     /**

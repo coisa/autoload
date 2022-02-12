@@ -7,35 +7,35 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/autoload
- * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Autoload;
-
 use CoiSA\Autoload\Generator\ClassMapGeneratorInterface;
+use CoiSA\Factory\FactoryInterface;
 use Composer\Autoload\ClassLoader;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-/**
- * Class Autoloader.
- *
- * @package CoiSA\Autoload
- */
-final class Autoloader implements AutoloaderInterface
+final class AutoloadFactory implements FactoryInterface
 {
-    /** @var ClassLoader */
+    /**
+     * @var ClassLoader
+     */
     private $classLoader;
 
-    /** @var ClassMapGeneratorInterface */
+    /**
+     * @var ClassMapGeneratorInterface
+     */
     private $classMapGenerator;
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
-     * Autoloader constructor.
+     * AutoloaderFactory constructor.
      *
      * @param ClassMapGeneratorInterface $classMapGenerator
      * @param ClassLoader                $classLoader
@@ -52,23 +52,18 @@ final class Autoloader implements AutoloaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function register()
+    public function create()
     {
-        $classMap = $this->getClassMap();
+        $autoloader = new Autoloader(
+            $this->classMapGenerator,
+            $this->classLoader,
+            $this->logger
+        );
 
-        $this->classLoader->addClassMap($classMap);
-        $this->classLoader->register();
+        $autoloader->register();
 
-        $this->logger->debug('ClassMap added to autoloader.', \compact('classMap'));
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getClassMap()
-    {
-        return $this->classMapGenerator->getClassMap();
+        return $autoloader;
     }
 }

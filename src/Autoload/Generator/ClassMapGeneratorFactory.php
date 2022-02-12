@@ -16,7 +16,7 @@ namespace CoiSA\Autoload\Generator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ClassMapGeneratorFactory
+ * Class ClassMapGeneratorFactory.
  *
  * @package CoiSA\Autoload\Generator
  */
@@ -34,7 +34,7 @@ final class ClassMapGeneratorFactory
 
     /**
      * @param array                $directories
-     * @param null                 $path
+     * @param null|string          $path
      * @param null|LoggerInterface $logger
      *
      * @return ClassMapGenerator
@@ -48,6 +48,8 @@ final class ClassMapGeneratorFactory
             $path ?: self::getClassMapDefaultPath(),
             $logger
         );
+
+        // @TODO try get directories from composer.json
 
         foreach ($directories as $directory) {
             $classMapFileGenerator->addDirectory($directory);
