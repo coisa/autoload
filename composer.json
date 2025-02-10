@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.3",
-        "coisa/exceptions": "^1.0",
+        "coisa/exceptions": "^1.0 || ^2.0",
         "coisa/factory": "^1.7",
         "composer/composer": "^2.0",
         "psr/log": "^1.1"
