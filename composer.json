@@ -14,7 +14,7 @@
         "coisa/exceptions": "^1.0 || ^2.0",
         "coisa/factory": "^1.7",
         "composer/composer": "^2.0",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1 || ^2.0"
     },
     "require-dev": {
         "coisa/php-cs-fixer": "^1.0 || ^2.0",
